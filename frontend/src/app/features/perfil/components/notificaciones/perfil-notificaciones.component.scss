@@ -1,0 +1,8 @@
+.notificacion-card {
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}

@@ -1,0 +1,45 @@
+<!-- Lista de notificaciones paginadas -->
+<div
+  *ngFor="let n of notificacionesPaginadas"
+  class="notificacion-card p-3 border rounded mb-2 d-flex align-items-start gap-3"
+>
+  <i
+    [ngClass]="{
+      'bi bi-check-circle-fill text-success': n.leida,
+      'bi bi-bell-fill text-primary': !n.leida
+    }"
+    style="font-size: 1.5rem"
+  ></i>
+
+  <div>
+    <div class="fw-normal">{{ n.mensaje }}</div>
+    <div class="text-muted small">{{ n.fechaEnvio | timeAgo }}</div>
+  </div>
+</div>
+
+<!-- Información y navegación -->
+<div class="d-flex justify-content-between align-items-center mt-4">
+  <!-- Info de rango -->
+  <span class="text-muted small">
+    Mostrando {{ inicio + 1 }} - {{ fin > total ? total : fin }} de
+    {{ total }} resultados
+  </span>
+
+  <!-- Botones de navegación -->
+  <div class="btn-group">
+    <button
+      class="btn btn-outline-secondary"
+      (click)="paginaAnterior()"
+      [disabled]="paginaActual === 1"
+    >
+      ‹ Anterior
+    </button>
+    <button
+      class="btn btn-primary"
+      (click)="paginaSiguiente()"
+      [disabled]="paginaActual === totalPaginas()"
+    >
+      Siguiente ›
+    </button>
+  </div>
+</div>

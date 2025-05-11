@@ -1,0 +1,239 @@
+<div class="container py-4">
+  <div
+    class="mb-4 d-flex align-items-center gap-2 justify-content-center text-center"
+  >
+    <i class="bi bi-calendar-check fs-3 text-primary"></i>
+    <h2 class="mb-0 fw-semibold text-dark">Gestión de Reservas</h2>
+  </div>
+
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center mb-3 gap-2"
+  >
+    <div class="d-flex flex-grow-1 gap-2">
+      <div class="input-group flex-grow-1" style="height: 42px">
+        <span class="input-group-text bg-white">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por nombre de usuario..."
+          [(ngModel)]="filtroNombre"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <button
+        class="btn btn-outline-secondary d-flex align-items-center px-3"
+        style="height: 42px"
+        (click)="mostrarFiltros = !mostrarFiltros"
+      >
+        <i class="bi bi-funnel me-1"></i> Filtros
+        <i class="bi bi-chevron-down ms-2" *ngIf="!mostrarFiltros"></i>
+        <i class="bi bi-chevron-up ms-2" *ngIf="mostrarFiltros"></i>
+      </button>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      [routerLink]="['/reservas/nueva']"
+      type="button"
+    >
+      <i class="bi bi-plus-lg me-1"></i> Nueva reserva
+    </button>
+  </div>
+
+  <div *ngIf="mostrarFiltros" class="card p-4 mb-4 shadow-sm">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary">Sala</label>
+        <select class="form-select" [(ngModel)]="filtrosSeleccionados.sala">
+          <option [ngValue]="null">Seleccione...</option>
+          <option *ngFor="let sala of espacios" [ngValue]="sala.idEspacio">
+            {{ sala.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary">Estado</label>
+        <select class="form-select" [(ngModel)]="filtrosSeleccionados.estado">
+          <option [ngValue]="null">Seleccione...</option>
+          <option
+            *ngFor="let estado of estadosReserva"
+            [ngValue]="estado.idEstado"
+          >
+            {{ estado.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary">Desde</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtrosSeleccionados.fechaInicio"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary">Hasta</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtrosSeleccionados.fechaFin"
+        />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+        Limpiar
+      </button>
+      <button class="btn btn-primary" (click)="aplicarFiltro()">Aplicar</button>
+    </div>
+  </div>
+
+  <div class="row gy-4">
+    <div class="col-md-4" *ngFor="let reserva of reservasPaginadas">
+      <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+        <!-- Imagen -->
+        <img
+          [src]="getImagenUrl(reserva.imagenEspacio)"
+          class="card-img-top"
+          [alt]="reserva.nombreEspacio"
+          style="height: 200px; object-fit: cover"
+        />
+
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="fw-semibold text-dark mb-1">
+              {{ reserva.nombreUsuario }}
+            </h5>
+            <span
+              class="badge rounded-pill px-3"
+              [ngClass]="{
+                'bg-success-subtle text-success':
+                  reserva.descripcionEstado === 'Confirmada',
+                'bg-warning-subtle text-warning':
+                  reserva.descripcionEstado === 'Pendiente',
+                'bg-danger-subtle text-danger':
+                  reserva.descripcionEstado === 'Cancelada'
+              }"
+            >
+              {{ reserva.descripcionEstado }}
+            </span>
+          </div>
+
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-telephone me-1"></i> {{ reserva.telefonoUsuario }}
+          </p>
+
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-door-closed me-1"></i> {{ reserva.nombreEspacio }}
+          </p>
+
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-calendar me-1"></i>
+            {{ reserva.fechaInicio | date : "dd/MM/yyyy HH:mm" }}
+          </p>
+
+          <p class="mb-2 text-secondary small">
+            <i class="bi bi-hourglass-split me-1"></i>
+            Periodo: {{ getDuracionEnHoras(reserva) }} horas
+          </p>
+
+          <div class="d-flex justify-content-end gap-3 mt-2">
+            <i
+              class="bi bi-pencil text-primary"
+              role="button"
+              title="Editar"
+              [routerLink]="['/reservas/editar', reserva.idReserva]"
+            ></i>
+            <i
+              class="bi bi-trash text-danger"
+              role="button"
+              title="Eliminar"
+              (click)="abrirModalEliminar(reserva)"
+              data-bs-toggle="modal"
+              data-bs-target="#confirmDeleteReservaModal"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="d-flex justify-content-between align-items-center mt-4 small text-muted"
+  >
+    <div>
+      Mostrando {{ rangoInicio + 1 }} -
+      {{ rangoFin > totalReservas ? totalReservas : rangoFin }} de
+      {{ totalReservas }} resultados
+    </div>
+    <div>
+      <button
+        class="btn btn-outline-secondary btn-sm me-2"
+        (click)="paginaAnterior()"
+        [disabled]="paginaActual === 0"
+      >
+        <i class="bi bi-chevron-left"></i> Anterior
+      </button>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="paginaSiguiente()"
+        [disabled]="rangoFin >= totalReservas"
+      >
+        Siguiente <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal eliminar -->
+<div
+  class="modal fade"
+  id="confirmDeleteReservaModal"
+  tabindex="-1"
+  aria-labelledby="confirmDeleteReservaModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteReservaModalLabel">
+          Eliminar reserva
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro que deseas eliminar la reserva de
+        <strong>{{ reservaEliminable?.nombreUsuario }}</strong
+        >?
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="eliminarReservaConfirmada()"
+        >
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,177 @@
+<div class="container py-4">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>Panel de Control
+    de Reservas
+  </h2>
+
+  <!-- Filtros -->
+  <div class="card shadow-sm p-3 mb-4">
+    <div class="row g-3 align-items-end">
+      <!-- Fecha desde -->
+      <div class="col-md-3">
+        <label class="form-label">Desde</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtro.fechaInicio"
+        />
+      </div>
+
+      <!-- Fecha hasta -->
+      <div class="col-md-3">
+        <label class="form-label">Hasta</label>
+        <input type="date" class="form-control" [(ngModel)]="filtro.fechaFin" />
+      </div>
+
+      <!-- Tipo de espacio -->
+      <div class="col-md-3">
+        <label class="form-label">Tipo de espacio</label>
+        <select class="form-select" [(ngModel)]="filtro.tipoSala">
+          <option [ngValue]="null">Todas</option>
+          <option
+            *ngFor="let tipo of tiposEspacio"
+            [ngValue]="tipo.idTipoEspacio"
+          >
+            {{ tipo.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Estado -->
+      <div class="col-md-3">
+        <label class="form-label">Estado</label>
+        <select class="form-select" [(ngModel)]="filtro.estado">
+          <option [ngValue]="null">Todos</option>
+          <option
+            *ngFor="let estado of estadosReserva"
+            [ngValue]="estado.idEstado"
+          >
+            {{ estado.descripcion }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+        Limpiar
+      </button>
+      <button class="btn btn-primary" (click)="aplicarFiltros()">
+        Aplicar
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row g-3 mb-4">
+    <div
+      class="col-md-3"
+      *ngFor="
+        let item of [
+          {
+            valor: kpi.totalReservas,
+            texto: 'Reservas totales',
+            icono: 'bi-calendar-check',
+            color: 'text-primary'
+          },
+          {
+            valor: kpi.tasaOcupacion + '%',
+            texto: 'Tasa de ocupación',
+            icono: 'bi-graph-up',
+            color: 'text-success'
+          },
+          {
+            valor: kpi.usuariosActivos,
+            texto: 'Usuarios activos',
+            icono: 'bi-person-check',
+            color: 'text-info'
+          },
+          {
+            valor: kpi.horasReservadas,
+            texto: 'Horas reservadas',
+            icono: 'bi-clock-history',
+            color: 'text-warning'
+          }
+        ]
+      "
+    >
+      <div class="card shadow-sm p-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fs-4 fw-bold">{{ item.valor }}</div>
+            <div class="text-muted">{{ item.texto }}</div>
+          </div>
+          <i class="bi fs-3" [ngClass]="[item.icono, item.color]"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card shadow-sm p-3 h-100">
+        <h6 class="fw-semibold mb-3">Reservas por periodo</h6>
+        <div style="height: 300px">
+          <canvas
+            id="reservasPeriodoChart"
+            style="height: 100% !important"
+          ></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm p-3 h-100">
+        <h6 class="fw-semibold mb-3">Distribución por tipo de espacio</h6>
+        <div style="height: 300px">
+          <canvas id="tipoSalaChart" style="height: 100% !important"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Últimas Reservas -->
+  <div class="card shadow-sm mt-4 p-3">
+    <h6 class="fw-semibold mb-3">5 Últimas Reservas</h6>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Sala</th>
+            <th>Fecha</th>
+            <th>Duración</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of ultimasReservas">
+            <td>{{ reserva.usuario }}</td>
+            <td>{{ reserva.sala }}</td>
+            <td>{{ reserva.fecha }}</td>
+            <td>{{ reserva.duracion }}</td>
+            <td>
+              <span
+                class="badge rounded-pill px-3"
+                [ngClass]="{
+                  'bg-success-subtle text-success':
+                    reserva.estado === 'Confirmada',
+                  'bg-warning-subtle text-warning':
+                    reserva.estado === 'Pendiente',
+                  'bg-info-subtle text-info': reserva.estado === 'Completada',
+                  'bg-danger-subtle text-danger': reserva.estado === 'Cancelada'
+                }"
+              >
+                {{ reserva.estado }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

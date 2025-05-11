@@ -1,0 +1,63 @@
+<div class="position-relative">
+  <!-- Campana -->
+  <i
+    class="bi bi-bell-fill fs-4"
+    role="button"
+    [class.text-primary]="mostrarLista"
+    [class.bell-animation]="notificaciones.length > 0"
+    (click)="toggleLista()"
+  ></i>
+
+  <!-- Badge de contador -->
+  <span
+    class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+    *ngIf="notificaciones.length > 0"
+  >
+    {{ notificaciones.length }}
+  </span>
+
+  <!-- Panel desplegable -->
+  <div
+    class="dropdown-menu show p-2 shadow"
+    *ngIf="mostrarLista"
+    style="position: absolute; right: 0; top: 100%; width: 300px; z-index: 1050"
+  >
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <strong>Notificaciones</strong>
+      <div class="d-flex align-items-center gap-2">
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          (click)="marcarTodasComoLeidas()"
+          *ngIf="notificaciones.length > 0"
+        >
+          Marcar todas
+        </button>
+        <!-- Aspa para cerrar -->
+        <button
+          class="btn btn-sm btn-outline-danger"
+          (click)="toggleLista()"
+          title="Cerrar"
+        >
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+    </div>
+
+    <p *ngIf="notificaciones.length === 0" class="text-muted mb-0">
+      No hay nuevas notificaciones.
+    </p>
+
+    <div
+      *ngFor="let noti of notificaciones"
+      class="alert alert-light d-flex justify-content-between align-items-start mb-2"
+    >
+      <span class="text-dark small">{{ noti.mensaje }}</span>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        (click)="marcarComoLeida(noti)"
+      >
+        Marcar
+      </button>
+    </div>
+  </div>
+</div>

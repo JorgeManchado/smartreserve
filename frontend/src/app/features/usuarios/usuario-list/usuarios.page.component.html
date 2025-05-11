@@ -1,0 +1,338 @@
+<div class="container py-4">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-people-fill fs-3 text-primary"></i> Gestión de Usuarios
+  </h2>
+
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center mb-3 gap-2"
+  >
+    <div class="d-flex flex-grow-1 gap-2">
+      <div class="input-group flex-grow-1" style="height: 42px">
+        <span class="input-group-text bg-white">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar usuarios..."
+          [(ngModel)]="filtro"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <button
+        class="btn btn-outline-secondary d-flex align-items-center px-3"
+        style="height: 42px"
+        (click)="toggleFiltros()"
+      >
+        <i class="bi bi-funnel me-1"></i> Filtros
+        <i class="bi bi-chevron-down ms-2" *ngIf="!mostrarFiltros"></i>
+        <i class="bi bi-chevron-up ms-2" *ngIf="mostrarFiltros"></i>
+      </button>
+    </div>
+
+    <button
+      class="btn btn-primary px-3"
+      style="height: 42px"
+      [routerLink]="['/usuarios/nuevo']"
+    >
+      <i class="bi bi-plus-lg me-1"></i> Nuevo usuario
+    </button>
+  </div>
+
+  <div *ngIf="mostrarFiltros" class="card p-4 mb-3 shadow-sm">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Correo</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="filtrosAvanzados.correo"
+          placeholder="ejemplo@correo.com"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Rol</label>
+        <div class="d-flex gap-2 flex-wrap">
+          <button
+            type="button"
+            class="btn rounded-pill px-3"
+            [ngClass]="{
+              'bg-primary bg-opacity-25 text-primary border-0':
+                filtrosAvanzados.roles.includes('Administrador'),
+              'btn-outline-primary':
+                !filtrosAvanzados.roles.includes('Administrador')
+            }"
+            (click)="toggleRol('Administrador')"
+          >
+            Administrador
+          </button>
+          <button
+            type="button"
+            class="btn rounded-pill px-3"
+            [ngClass]="{
+              'bg-primary bg-opacity-25 text-primary border-0':
+                filtrosAvanzados.roles.includes('Empleado'),
+              'btn-outline-primary':
+                !filtrosAvanzados.roles.includes('Empleado')
+            }"
+            (click)="toggleRol('Empleado')"
+          >
+            Empleado
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Estado</label>
+        <div class="d-flex gap-2 flex-wrap">
+          <button
+            type="button"
+            class="btn rounded-pill px-3"
+            [ngClass]="{
+              'bg-success bg-opacity-25 text-success border-0':
+                filtrosAvanzados.estados.includes('Activo'),
+              'btn-outline-success':
+                !filtrosAvanzados.estados.includes('Activo')
+            }"
+            (click)="toggleEstado('Activo')"
+          >
+            Activo
+          </button>
+          <button
+            type="button"
+            class="btn rounded-pill px-3"
+            [ngClass]="{
+              'bg-danger bg-opacity-25 text-danger border-0':
+                filtrosAvanzados.estados.includes('Inactivo'),
+              'btn-outline-danger':
+                !filtrosAvanzados.estados.includes('Inactivo')
+            }"
+            (click)="toggleEstado('Inactivo')"
+          >
+            Inactivo
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Último acceso desde</label
+        >
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtrosAvanzados.fechaDesde"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Último acceso hasta</label
+        >
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtrosAvanzados.fechaHasta"
+        />
+      </div>
+
+      <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+        <button class="btn btn-secondary" (click)="limpiarFiltros()">
+          Limpiar
+        </button>
+        <button class="btn btn-primary" (click)="aplicarFiltro()">
+          Aplicar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive d-none d-md-block shadow-sm rounded bg-white">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th class="fw-normal text-secondary text-uppercase small">Usuario</th>
+          <th class="fw-normal text-secondary text-uppercase small">Correo</th>
+          <th class="fw-normal text-secondary text-uppercase small">Rol</th>
+          <th class="fw-normal text-secondary text-uppercase small">Estado</th>
+          <th class="fw-normal text-secondary text-uppercase small">
+            Último Acceso
+          </th>
+          <th class="fw-normal text-secondary text-uppercase small">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuariosPaginados">
+          <td>
+            <i class="bi bi-person-circle me-2 text-primary"></i
+            >{{ usuario.nombre }}
+          </td>
+          <td>
+            <i class="bi bi-envelope-fill me-2 text-muted"></i
+            >{{ usuario.email }}
+          </td>
+          <td>{{ usuario.rol }}</td>
+          <td>
+            <span
+              class="badge rounded-pill px-3"
+              [ngClass]="{
+                'bg-success bg-opacity-25 text-success':
+                  usuario.estado === 'Activo',
+                'bg-danger bg-opacity-25 text-danger':
+                  usuario.estado !== 'Activo'
+              }"
+            >
+              {{ usuario.estado }}
+            </span>
+          </td>
+          <td>
+            <span *ngIf="usuario.ultimoAcceso; else noFecha">
+              {{ usuario.ultimoAcceso | date : "dd/MM/yyyy HH:mm" }}
+            </span>
+            <ng-template #noFecha>
+              <span class="text-muted fst-italic small">Sin acceso</span>
+            </ng-template>
+          </td>
+          <td>
+            <i
+              class="bi bi-pencil me-2 text-primary"
+              role="button"
+              [routerLink]="['/usuarios/editar', usuario.idUsuario]"
+            ></i>
+            <i
+              class="bi bi-trash text-danger"
+              role="button"
+              (click)="abrirModalConfirmacion(usuario)"
+              data-bs-toggle="modal"
+              data-bs-target="#confirmDeleteModal"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-block d-md-none">
+    <div *ngFor="let usuario of usuariosPaginados" class="card mb-3 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-2">
+          <i class="bi bi-person-circle me-2 text-primary fs-4"></i>
+          <h5 class="mb-0">{{ usuario.nombre }}</h5>
+        </div>
+        <p class="mb-1">
+          <i class="bi bi-envelope-fill text-muted me-1"></i>{{ usuario.email }}
+        </p>
+        <p class="mb-1"><strong>Rol:</strong> {{ usuario.rol }}</p>
+        <p class="mb-1">
+          <strong>Estado:</strong>
+          <span
+            class="badge rounded-pill px-3"
+            [ngClass]="{
+              'bg-success bg-opacity-25 text-success':
+                usuario.estado === 'Activo',
+              'bg-danger bg-opacity-25 text-danger': usuario.estado !== 'Activo'
+            }"
+          >
+            {{ usuario.estado }}
+          </span>
+        </p>
+        <p class="mb-2">
+          <strong>Último acceso:</strong>
+          <span *ngIf="usuario.ultimoAcceso; else noFechaCard">
+            {{ usuario.ultimoAcceso | date : "dd/MM/yyyy HH:mm" }}
+          </span>
+          <ng-template #noFechaCard>
+            <span class="text-muted fst-italic">Sin acceso</span>
+          </ng-template>
+        </p>
+        <div>
+          <i
+            class="bi bi-pencil me-2 text-primary"
+            role="button"
+            [routerLink]="['/usuarios/editar', usuario.idUsuario]"
+          ></i>
+          <i
+            class="bi bi-trash text-danger"
+            role="button"
+            (click)="abrirModalConfirmacion(usuario)"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmDeleteModal"
+          ></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="d-flex justify-content-between align-items-center mt-3 small text-muted flex-wrap gap-2"
+  >
+    <div>
+      Mostrando {{ rangoActual }} de {{ usuariosFiltrados.length }} resultados
+    </div>
+    <div>
+      <button
+        class="btn btn-sm btn-outline-secondary me-2"
+        (click)="paginaAnterior()"
+        [disabled]="paginaActual === 0"
+      >
+        Anterior
+      </button>
+      <button
+        class="btn btn-sm btn-primary"
+        (click)="paginaSiguiente()"
+        [disabled]="
+          (paginaActual + 1) * tamanioPagina >= usuariosFiltrados.length
+        "
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="confirmDeleteModal"
+  tabindex="-1"
+  aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">
+          Eliminar usuario
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro que deseas eliminar a
+        <strong>{{ usuarioSeleccionado?.nombre }}</strong
+        >?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="confirmarEliminacion()"
+        >
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

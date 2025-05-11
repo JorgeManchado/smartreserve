@@ -1,0 +1,37 @@
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+h3 {
+  font-weight: 600;
+  color: #333;
+}
+
+.card {
+  border-radius: 1rem;
+  border: none;
+}
+
+label {
+  font-weight: 500;
+  color: #555;
+}
+
+input,
+select,
+button {
+  font-size: 0.95rem;
+}
+
+input[type="datetime-local"] {
+  line-height: normal;
+}
+
+button[type="submit"] {
+  padding: 0.5rem 1.25rem;
+}
+
+.form-check-label {
+  font-weight: 400;
+}

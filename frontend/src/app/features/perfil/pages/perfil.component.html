@@ -1,0 +1,67 @@
+<div class="container py-4 d-flex flex-column align-items-center">
+  <div class="mb-4 d-flex align-items-center gap-2 text-center">
+    <i class="bi bi-person-circle fs-3 text-primary"></i>
+    <h2 class="mb-0 fw-semibold text-dark">Gestión del Perfil</h2>
+  </div>
+
+  <!-- Tarjeta de perfil -->
+  <div class="card perfil-card shadow p-4 w-100" style="max-width: 960px">
+    <!-- Header con avatar y nombre -->
+    <div class="d-flex align-items-center mb-4">
+      <div class="perfil-avatar position-relative me-4">
+        <div
+          class="rounded-circle avatar-placeholder d-flex align-items-center justify-content-center"
+        >
+          <i class="bi bi-person fs-1 text-muted"></i>
+        </div>
+        <button class="btn btn-sm btn-primary rounded-circle upload-btn">
+          <i class="bi bi-camera-fill"></i>
+        </button>
+      </div>
+      <div>
+        <h4 class="mb-0 fw-bold">{{ nombre }}</h4>
+        <small class="text-muted">{{ rol }}</small>
+      </div>
+    </div>
+
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-4 border-0">
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'info'"
+          (click)="changeTab('info')"
+        >
+          Información Personal
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'seguridad'"
+          (click)="changeTab('seguridad')"
+        >
+          Seguridad
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'notificaciones'"
+          (click)="changeTab('notificaciones')"
+        >
+          Notificaciones
+        </button>
+      </li>
+    </ul>
+
+    <!-- Contenido dinámico -->
+    <ng-container [ngSwitch]="activeTab">
+      <app-perfil-info *ngSwitchCase="'info'"></app-perfil-info>
+      <app-perfil-seguridad *ngSwitchCase="'seguridad'"></app-perfil-seguridad>
+      <app-perfil-notificaciones
+        *ngSwitchCase="'notificaciones'"
+      ></app-perfil-notificaciones>
+    </ng-container>
+  </div>
+</div>

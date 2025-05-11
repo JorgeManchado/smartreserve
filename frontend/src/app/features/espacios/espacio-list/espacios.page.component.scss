@@ -1,0 +1,22 @@
+.input-group .form-control,
+.input-group-text,
+button.btn {
+  height: 38px;
+  font-size: 0.9rem;
+}
+
+.modal-header.custom-danger {
+  background-color: #f26570;
+  color: #ffffff;
+}
+
+.btn-danger-light {
+  background-color: #f26570;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-danger-light:hover {
+  background-color: #f33c4e;
+  color: #ffffff;
+}

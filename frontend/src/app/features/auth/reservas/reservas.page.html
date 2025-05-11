@@ -1,0 +1,35 @@
+<div class="container">
+  <h2 class="mt-4 mb-4">📅 Listado de Reservas</h2>
+
+  <table class="table table-hover table-striped shadow-sm border">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of reservas">
+        <td>{{ r.id }}</td>
+        <td>{{ r.cliente }}</td>
+        <td>{{ r.fecha }}</td>
+        <td>{{ r.hora }}</td>
+        <td>
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-success': r.estado === 'Confirmada',
+              'bg-warning text-dark': r.estado === 'Pendiente',
+              'bg-danger': r.estado === 'Cancelada'
+            }"
+          >
+            {{ r.estado }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

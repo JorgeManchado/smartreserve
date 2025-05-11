@@ -1,0 +1,246 @@
+<div class="container py-4">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-buildings fs-3 text-primary"></i> Gestión de Espacios
+  </h2>
+
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center mb-3 gap-2"
+  >
+    <div class="d-flex flex-grow-1 gap-2">
+      <div class="input-group flex-grow-1" style="height: 42px">
+        <span class="input-group-text bg-white">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por nombre..."
+          [(ngModel)]="filtroNombre"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <button
+        class="btn btn-outline-secondary d-flex align-items-center px-3"
+        style="height: 42px"
+        (click)="mostrarFiltros = !mostrarFiltros"
+      >
+        <i class="bi bi-funnel me-1"></i> Filtros
+        <i class="bi bi-chevron-down ms-2" *ngIf="!mostrarFiltros"></i>
+        <i class="bi bi-chevron-up ms-2" *ngIf="mostrarFiltros"></i>
+      </button>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      [routerLink]="['/espacios/nuevo']"
+      type="button"
+    >
+      <i class="bi bi-plus-lg me-1"></i> Nuevo espacio
+    </button>
+  </div>
+
+  <div *ngIf="mostrarFiltros" class="card p-4 mb-4 shadow-sm">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary"
+          >Tipo de espacio</label
+        >
+        <select class="form-select" [(ngModel)]="filtrosSeleccionados.tipo">
+          <option [ngValue]="null">Seleccione...</option>
+          <option
+            *ngFor="let tipo of tiposEspacio"
+            [ngValue]="tipo.idTipoEspacio"
+          >
+            {{ tipo.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary">Estado</label>
+        <select class="form-select" [(ngModel)]="filtrosSeleccionados.estado">
+          <option [ngValue]="null">Seleccione...</option>
+          <option
+            *ngFor="let estado of estadosEspacio"
+            [ngValue]="estado.idEstado"
+          >
+            {{ estado.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary"
+          >Capacidad mínima</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Ej. 10"
+          [(ngModel)]="filtrosSeleccionados.capacidadMin"
+          min="1"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-normal text-secondary">Ubicación</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ej. Planta 1, Edificio A"
+          [(ngModel)]="filtrosSeleccionados.ubicacion"
+        />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+        Limpiar
+      </button>
+      <button class="btn btn-primary" (click)="aplicarFiltro()">Aplicar</button>
+    </div>
+  </div>
+
+  <div class="row gy-4">
+    <div class="col-md-4" *ngFor="let espacio of espaciosPaginados">
+      <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+        <img
+          [src]="getImagenUrl(espacio.imagen)"
+          class="card-img-top"
+          [alt]="espacio.nombre"
+          style="height: 200px; object-fit: cover"
+        />
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="fw-semibold text-dark mb-1">{{ espacio.nombre }}</h5>
+            <span
+              class="badge rounded-pill px-3"
+              [ngClass]="{
+                'bg-success-subtle text-success':
+                  espacio.estado.descripcion === 'Disponible',
+                'bg-danger-subtle text-danger':
+                  espacio.estado.descripcion !== 'Disponible'
+              }"
+            >
+              {{ espacio.estado.descripcion }}
+            </span>
+          </div>
+
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-people me-1"></i> {{ espacio.capacidad }} personas
+          </p>
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-geo-alt me-1"></i> {{ espacio.ubicacion }}
+          </p>
+          <p class="mb-2 text-secondary small">
+            <i class="bi bi-tag me-1"></i> {{ espacio.tipo.descripcion }}
+          </p>
+
+          <p class="mb-2 text-secondary small">
+            <i class="bi bi-tools me-1"></i>
+            <span *ngIf="espacio.equipamientos?.length; else sinEquipamiento">
+              Equipamiento:
+              {{ getDescripcionEquipamientos(espacio.equipamientos || []) }}
+            </span>
+            <ng-template #sinEquipamiento>
+              <em class="text-muted">Sin equipamiento</em>
+            </ng-template>
+          </p>
+          <div class="d-flex justify-content-end gap-3 mt-2">
+            <i
+              class="bi bi-pencil text-primary"
+              role="button"
+              title="Editar"
+              [routerLink]="['/espacios/editar', espacio.idEspacio]"
+            ></i>
+            <i
+              class="bi bi-trash text-danger"
+              role="button"
+              title="Eliminar"
+              (click)="abrirModalEliminar(espacio)"
+              data-bs-toggle="modal"
+              data-bs-target="#confirmDeleteEspacioModal"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="d-flex justify-content-between align-items-center mt-4 small text-muted"
+  >
+    <div>
+      Mostrando {{ rangoInicio + 1 }} -
+      {{ rangoFin > totalEspacios ? totalEspacios : rangoFin }} de
+      {{ totalEspacios }} resultados
+    </div>
+    <div>
+      <button
+        class="btn btn-outline-secondary btn-sm me-2"
+        (click)="paginaAnterior()"
+        [disabled]="paginaActual === 0"
+      >
+        <i class="bi bi-chevron-left"></i> Anterior
+      </button>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="paginaSiguiente()"
+        [disabled]="rangoFin >= totalEspacios"
+      >
+        Siguiente <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="confirmDeleteEspacioModal"
+  tabindex="-1"
+  aria-labelledby="confirmDeleteEspacioModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteEspacioModalLabel">
+          Eliminar espacio
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+          (click)="cancelarEliminacion()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro que deseas eliminar el espacio
+        <strong>{{ espacioEliminable?.nombre }}</strong
+        >?
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+          (click)="cancelarEliminacion()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="eliminarEspacioConfirmado()"
+        >
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

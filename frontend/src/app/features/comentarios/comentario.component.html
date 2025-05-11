@@ -1,0 +1,189 @@
+<div class="container">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-chat-dots fs-4 text-primary"></i> Gestión de Comentarios
+  </h2>
+
+  <!-- Filtros -->
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center mb-3 gap-2"
+  >
+    <div class="d-flex flex-grow-1 gap-2">
+      <div class="input-group flex-grow-1" style="height: 42px">
+        <span class="input-group-text bg-white"
+          ><i class="bi bi-search"></i
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por usuario..."
+          [(ngModel)]="filtroNombre"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <button
+        class="btn btn-outline-secondary d-flex align-items-center px-3"
+        style="height: 42px"
+        (click)="mostrarFiltros = !mostrarFiltros"
+      >
+        <i class="bi bi-funnel me-1"></i> Filtros
+        <i class="bi bi-chevron-down ms-2" *ngIf="!mostrarFiltros"></i>
+        <i class="bi bi-chevron-up ms-2" *ngIf="mostrarFiltros"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel de filtros avanzados -->
+  <div *ngIf="mostrarFiltros" class="card p-4 mb-4 shadow-sm">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Estado</label>
+        <select class="form-select" [(ngModel)]="filtroEstado">
+          <option value="">Todos</option>
+          <option value="Aprobado">Aprobado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Anulado">Anulado</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Valoración mínima</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Ej. 3"
+          [(ngModel)]="filtroValoracionMin"
+          min="1"
+          max="5"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Buscar por texto</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Palabra clave en el comentario"
+          [(ngModel)]="filtroTexto"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Fecha desde</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtroFechaDesde"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Fecha hasta</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtroFechaHasta"
+        />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+        Limpiar
+      </button>
+      <button class="btn btn-primary" (click)="aplicarFiltro()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- Lista de comentarios -->
+  <div *ngFor="let c of comentariosPaginados" class="card shadow-sm mb-3 p-3">
+    <div class="d-flex justify-content-between align-items-start">
+      <div class="d-flex align-items-start gap-3">
+        <div
+          class="rounded-circle bg-light d-flex align-items-center justify-content-center"
+          style="width: 48px; height: 48px"
+        >
+          <i class="bi bi-person fs-4 text-muted"></i>
+        </div>
+        <div>
+          <strong>{{ c.nombreUsuario }}</strong>
+          <div class="text-muted small">
+            {{ c.fecha | date : "dd 'de' MMMM 'de' yyyy" }}
+          </div>
+          <div class="text-warning mt-1">
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-star-fill': c.valoracion >= star,
+                  'bi-star': c.valoracion < star
+                }"
+              ></i>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <span
+        class="badge rounded-pill px-3"
+        [ngClass]="{
+          'badge-aprobado': c.estadoDescripcion === 'Aprobado',
+          'badge-pendiente': c.estadoDescripcion === 'Pendiente',
+          'badge-anulado': c.estadoDescripcion === 'Anulado'
+        }"
+      >
+        {{ c.estadoDescripcion }}
+      </span>
+    </div>
+
+    <p class="mt-3 mb-1">{{ c.texto }}</p>
+    <small class="text-muted">Reserva #{{ c.idReserva }}</small>
+
+    <div class="mt-3 d-flex gap-2">
+      <button
+        (click)="anular(c.idComentario)"
+        class="btn btn-outline-danger btn-sm"
+        [disabled]="c.estadoDescripcion !== 'Pendiente'"
+      >
+        Anular
+      </button>
+      <button
+        (click)="aprobar(c.idComentario)"
+        class="btn btn-outline-success btn-sm"
+        [disabled]="c.estadoDescripcion !== 'Pendiente'"
+      >
+        Aprobar
+      </button>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <span>
+      Mostrando {{ (paginaActual - 1) * elementosPorPagina + 1 }} a
+      {{ getHasta() }} de {{ comentarios.length }} resultados
+    </span>
+    <div>
+      <button
+        class="btn btn-outline-secondary btn-sm me-2"
+        (click)="cambiarPagina(-1)"
+        [disabled]="paginaActual === 1"
+      >
+        Anterior
+      </button>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="cambiarPagina(1)"
+        [disabled]="paginaActual >= totalPaginas"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

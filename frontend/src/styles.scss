@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.toast-success {
+  background-color: #cce5ff !important; /* azul clarito */
+  color: #004085 !important; /* azul oscuro para el texto */
+}

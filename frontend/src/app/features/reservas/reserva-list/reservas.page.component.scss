@@ -1,0 +1,53 @@
+.input-group .form-control,
+.input-group-text,
+button.btn {
+  height: 38px;
+  font-size: 0.9rem;
+}
+
+.card-body {
+  padding: 1rem 1.25rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+.modal-header.bg-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.modal-title {
+  font-weight: 600;
+}
+
+.btn-outline-secondary,
+.btn-primary,
+.btn-danger {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.card {
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.bi-pencil,
+.bi-trash {
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.bi-pencil:hover {
+  color: #0d6efd;
+}
+
+.bi-trash:hover {
+  color: #dc3545;
+}
