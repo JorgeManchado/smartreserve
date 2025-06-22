@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: gestionreservas
+    env: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_URL
+        value: jdbc:postgresql://dpg-d0h4ra15pdvs7388d9ug-a:5432/reservas_g2gc
+      - key: DB_USER
+        value: admin
+      - key: DB_PASS
+        value: NIF1uDCQv0kb8WPXv29o4eUF4FyZbziC
+      - key: JWT_SECRET
+        value: NzByJioqcExtTiQ5OHdYayFadFF2MyNGZ1I5KlZjQm5N

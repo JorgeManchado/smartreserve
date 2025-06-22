@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/espacios")
@@ -50,7 +51,8 @@ public class EspacioController {
             @RequestParam List<Long> equipamientos,
             @RequestParam(required = false) MultipartFile imagen
     ) {
-        EspacioResponseDTO dto = espacioService.create(
+
+                EspacioResponseDTO dto = espacioService.create(
                 nombre, capacidad, ubicacion, descripcion,
                 idTipoEspacio, idEstado, equipamientos, imagen
         );
@@ -88,6 +90,18 @@ public class EspacioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         espacioService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/{id}/actualizar-estado")
+    public ResponseEntity<Void> actualizarEstado(
+            @PathVariable Long id,
+            @RequestBody Map<String, Long> body
+    ) {
+
+        Long idEstado = body.get("idEstado");
+        espacioService.updateEstado(id, idEstado);
         return ResponseEntity.noContent().build();
     }
 }

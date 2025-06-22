@@ -1,0 +1,57 @@
+.bg-soft-danger {
+  //background-color: #fef2f2 !important;
+  background-color: #f87171 !important;
+}
+.text-danger-700 {
+  // color: #991b1b !important;
+  color: #fff !important;
+}
+.btn-soft-danger {
+  background-color: #f87171 !important;
+  color: white !important;
+  border: none;
+  font-weight: 500;
+}
+.btn-soft-danger:hover {
+  background-color: #ef4444 !important;
+}
+
+.bg-soft-success {
+  background-color: #ecfdf5 !important;
+}
+.text-success-700 {
+  color: #065f46 !important;
+}
+.btn-soft-success {
+  background-color: #34d399 !important;
+  color: white !important;
+  border: none;
+  font-weight: 500;
+}
+.btn-soft-success:hover {
+  background-color: #10b981 !important;
+}
+
+.modal-content {
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border: none;
+  overflow: hidden;
+}
+
+.modal-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.modal-body {
+  font-size: 1rem;
+  color: #374151;
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  gap: 0.5rem;
+  border-top: none;
+}

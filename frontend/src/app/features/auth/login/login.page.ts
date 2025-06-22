@@ -38,18 +38,19 @@ export class LoginPage {
     if (this.form.valid) {
       const { email, password } = this.form.value;
 
+      this.authService.logout();
+
       this.authService.login(email, password).subscribe({
         next: (response) => {
           this.authStore.login(response.token);
           const rol = this.authStore.getRoleValue();
-          console.log(rol);
-          console.log('entra');
           this.router.navigate([
-            rol === UserRole.ADMIN ? '/dashboard' : '/misreservas',
+            rol === UserRole.ADMIN ? '/dashboard' : '/calendario-reservas',
           ]);
         },
-        error: (err) => {
-          this.errorMessage = err.message;
+        error: (err: Error) => {
+          console.error('Mensaje de error:', err);
+          this.errorMessage = err.message || 'Servidor no disponible.';
         },
       });
     }

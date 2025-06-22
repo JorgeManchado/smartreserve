@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './core/auth/admin.guard';
+import { anyRoleGuard } from './core/auth/any-role.guard';
 import { empleadoGuard } from './core/auth/empleado.guard';
 
 export const routes: Routes = [
@@ -84,38 +85,41 @@ export const routes: Routes = [
       },
 
       {
-        path: 'reservas',
+        path: 'espacios-comentarios',
         canActivate: [empleadoGuard],
         loadComponent: () =>
           import(
-            './features/reservas/reserva-list/reservas.page.component'
-          ).then((m) => m.ReservasPageComponent),
+            './features/espacioscomentarios/espacioscomentarios.component'
+          ).then((m) => m.EspaciosComentariosComponent),
       },
+
       {
-        path: 'reservas/nueva',
-        canActivate: [empleadoGuard],
+        path: 'calendario-reservas',
+        canActivate: [anyRoleGuard],
         loadComponent: () =>
           import(
-            './features/reservas/reserva-form/reserva.form.component'
-          ).then((m) => m.ReservaFormComponent),
-      },
-      {
-        path: 'reservas/editar/:id',
-        canActivate: [empleadoGuard],
-        loadComponent: () =>
-          import(
-            './features/reservas/reserva-form/reserva.form.component'
-          ).then((m) => m.ReservaFormComponent),
+            './features/calendarioreservas/calendario-reservas.component'
+          ).then((m) => m.CalendarioReservasComponent),
       },
 
       {
         path: 'misreservas',
         canActivate: [empleadoGuard],
         loadComponent: () =>
-          import('./features/auth/reservas/reservas.page').then(
-            (m) => m.ReservasPage
-          ),
+          import(
+            './features/misreservas/misreservas-list/misreservas.page.component'
+          ).then((m) => m.MisReservasPageComponent),
       },
+
+      {
+        path: 'misreservas/nueva',
+        canActivate: [anyRoleGuard],
+        loadComponent: () =>
+          import(
+            './features/misreservas/misreservas-form/misreservas.form.component'
+          ).then((m) => m.MisReservasFormComponent),
+      },
+
       {
         path: '',
         redirectTo: '/login',

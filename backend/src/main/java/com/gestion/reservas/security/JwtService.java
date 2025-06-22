@@ -44,13 +44,22 @@ public class JwtService {
     }
 
     public Long extractIdUsuario(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(signingKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        return claims.get("idUsuario", Long.class);
+            return claims.get("idUsuario", Long.class);
+
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token expirado al extraer ID: " + e.getMessage());
+            return null;
+        } catch (JwtException e) {
+            System.out.println("Error al extraer ID del token: " + e.getMessage());
+            return null;
+        }
     }
 
 

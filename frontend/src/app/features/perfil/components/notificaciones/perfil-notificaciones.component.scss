@@ -1,8 +1,41 @@
 .notificacion-card {
   background-color: #f9f9f9;
   transition: background-color 0.2s ease-in-out;
+  word-break: break-word;
+}
 
-  &:hover {
-    background-color: #f1f1f1;
+.notificacion-card:hover {
+  background-color: #f1f1f1;
+}
+
+.icono-notificacion {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* Responsive ajustes */
+@media (max-width: 576px) {
+  .notificacion-card {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .icono-notificacion {
+    font-size: 1.25rem;
+  }
+
+  .btn-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-group .btn {
+    flex: 1;
+  }
+
+  .btn-group .btn + .btn {
+    margin-left: 0.5rem;
   }
 }

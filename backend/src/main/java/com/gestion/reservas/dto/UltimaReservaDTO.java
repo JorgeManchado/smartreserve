@@ -17,4 +17,6 @@ public class UltimaReservaDTO {
     private String fecha;
     private String duracion;
     private String estado;
+    private String color;
+    private String bgcolor;
 }

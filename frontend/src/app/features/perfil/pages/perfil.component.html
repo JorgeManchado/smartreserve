@@ -1,8 +1,10 @@
-<div class="container py-4 d-flex flex-column align-items-center">
-  <div class="mb-4 d-flex align-items-center gap-2 text-center">
-    <i class="bi bi-person-circle fs-3 text-primary"></i>
-    <h2 class="mb-0 fw-semibold text-dark">Gestión del Perfil</h2>
-  </div>
+<div class="container py-2 d-flex flex-column align-items-center">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-person-circle fs-3 text-primary"></i> Gestión del Perfil
+  </h2>
 
   <!-- Tarjeta de perfil -->
   <div class="card perfil-card shadow p-4 w-100" style="max-width: 960px">
@@ -25,8 +27,10 @@
     </div>
 
     <!-- Pestañas -->
-    <ul class="nav nav-tabs mb-4 border-0">
-      <li class="nav-item">
+    <ul
+      class="nav nav-tabs mb-4 border-0 perfil-tabs flex-nowrap overflow-auto"
+    >
+      <li class="nav-item flex-shrink-0">
         <button
           class="nav-link"
           [class.active]="activeTab === 'info'"
@@ -35,7 +39,7 @@
           Información Personal
         </button>
       </li>
-      <li class="nav-item">
+      <li class="nav-item flex-shrink-0">
         <button
           class="nav-link"
           [class.active]="activeTab === 'seguridad'"
@@ -44,7 +48,7 @@
           Seguridad
         </button>
       </li>
-      <li class="nav-item">
+      <li class="nav-item flex-shrink-0">
         <button
           class="nav-link"
           [class.active]="activeTab === 'notificaciones'"

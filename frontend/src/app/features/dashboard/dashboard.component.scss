@@ -1,6 +1,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 h2 {
@@ -14,9 +15,10 @@ h2 {
   border-radius: 1rem;
   border: 1px solid #f0f0f0;
   transition: box-shadow 0.2s ease;
-  &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  }
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .fs-4 {
@@ -33,22 +35,20 @@ canvas {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  canvas {
-    flex-grow: 1;
-  }
 }
 
-.table {
-  th {
-    font-weight: 600;
-    color: #333;
-  }
+.card-chart canvas {
+  flex-grow: 1;
+}
 
-  td {
-    vertical-align: middle;
-    font-size: 0.95rem;
-  }
+.table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.table td {
+  vertical-align: middle;
+  font-size: 0.95rem;
 }
 
 .badge {
@@ -57,12 +57,47 @@ canvas {
   font-weight: 500;
 }
 
-@media (max-width: 768px) {
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .fs-4 {
+    font-size: 1.1rem;
+  }
+
   .card-chart {
     height: 300px;
   }
+}
 
-  .fs-4 {
-    font-size: 1.1rem;
+@media (max-width: 768px) {
+  .row.g-3 > div,
+  .row.g-3.mb-4 > div,
+  .row.g-3.align-items-end > div {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .d-flex.justify-content-end {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .d-flex.justify-content-end button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
   }
 }

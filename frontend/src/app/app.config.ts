@@ -2,6 +2,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
   importProvidersFrom,
+  LOCALE_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {
@@ -20,6 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([AuthInterceptor])),
     provideClientHydration(withEventReplay()),
+    { provide: LOCALE_ID, useValue: 'es-ES' },
     importProvidersFrom(
       BrowserAnimationsModule,
       ToastrModule.forRoot({

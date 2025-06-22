@@ -1,6 +1,7 @@
 package com.gestion.reservas.service;
 
 import com.gestion.reservas.dto.NotificacionDTO;
+import com.gestion.reservas.dto.ReservaCalendarioDTO;
 import com.gestion.reservas.dto.ReservaDTO;
 import com.gestion.reservas.entity.*;
 import com.gestion.reservas.mapper.NotificacionMapper;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -82,7 +84,10 @@ public class ReservaServiceImpl implements ReservaService {
                 reserva.getEstado().getDescripcion(),
                 reserva.getFechaInicio(),
                 reserva.getFechaFin(),
-                reserva.getSincronizado()
+                reserva.getSincronizado(),
+                reserva.getOcupantes(),
+                reserva.getRecomendadaia(),
+                reserva.getEventid()
         );
     }
 
@@ -95,7 +100,29 @@ public class ReservaServiceImpl implements ReservaService {
         reserva.setFechaInicio(dto.getFechaInicio());
         reserva.setFechaFin(dto.getFechaFin());
         reserva.setSincronizado(dto.getSincronizado());
+        reserva.setOcupantes(dto.getOcupantes());
+        reserva.setRecomendadaia(dto.getRecomendadaia());
+        reserva.setEventid(dto.getEventid());
         return reserva;
     }
+
+    @Override
+    public List<ReservaCalendarioDTO> obtenerReservasEntreFechas(LocalDateTime desde, LocalDateTime hasta) {
+        List<Reserva> reservas = reservaRepository.findByFechaInicioBetween(desde, hasta);
+
+        return reservas.stream().map(r -> new ReservaCalendarioDTO(
+                r.getIdReserva(),
+                r.getFechaInicio(),
+                r.getFechaFin(),
+                r.getEspacio().getNombre(),
+                r.getUsuario().getNombre(),
+                r.getEstado().getDescripcion(),
+                r.getEstado().getColor(),
+                r.getEstado().getBgcolor(),
+                r.getEspacio().getTipoEspacio().getDescripcion()
+                    )).toList();
+    }
+
+
 }
 

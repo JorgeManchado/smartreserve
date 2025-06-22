@@ -1,0 +1,161 @@
+.section-title {
+  font-family: "Segoe UI", sans-serif;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card-image img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.card-body h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.estrellas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.estrellas i {
+  font-size: 1rem;
+}
+
+.estrellas span {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.comentario-link {
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+  margin-top: auto;
+}
+
+.comentario-link:hover {
+  text-decoration: underline;
+}
+
+.comentario-link i {
+  margin-right: 0.25rem;
+}
+
+.pagination-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+@media (min-width: 576px) {
+  .pagination-info {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.comentario-item {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.comentario-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #e0f0ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comentario-texto .nombre {
+  font-weight: 600;
+}
+
+.comentario-texto .meta {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.comentario-texto .texto {
+  font-size: 0.95rem;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+/* Estrellas en comentarios */
+.bi-star-fill {
+  color: #ffc107 !important;
+}
+
+.bi-star {
+  color: #e4e5e9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  }
+
+  .card-image img {
+    height: auto;
+  }
+}

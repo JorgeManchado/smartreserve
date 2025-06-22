@@ -1,5 +1,5 @@
 export interface Reserva {
-  idReserva: number;
+  idReserva?: number;
   idUsuario: number;
   nombreUsuario: string;
   telefonoUsuario: string;
@@ -15,4 +15,6 @@ export interface Reserva {
   fechaFin: string;
 
   sincronizado: boolean;
+
+  ocupantes: number;
 }

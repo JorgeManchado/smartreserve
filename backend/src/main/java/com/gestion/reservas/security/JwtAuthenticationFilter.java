@@ -30,47 +30,63 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
 
-
         String authHeader = request.getHeader("Authorization");
         String jwt = null;
 
+        // Obtenemos token JWT del header o parámetro
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
         } else if (request.getParameter("token") != null) {
             jwt = request.getParameter("token");
         }
 
+        // Si no hay token, seguimos sin autenticar
         if (jwt == null) {
-
             filterChain.doFilter(request, response);
             return;
         }
 
-        Long idUsuario = jwtService.extractIdUsuario(jwt);
+        try {
 
-        if (idUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            Long idUsuario = jwtService.extractIdUsuario(jwt);
 
+            if (idUsuario == null) {
+                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido o expirado.");
+                return;
+            }
+
+            if (SecurityContextHolder.getContext().getAuthentication() != null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // Cargamos usuario desde DB
             UserDetails userDetails = userDetailsService.loadUserById(idUsuario);
 
-
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-
-
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
-            } else {
-                System.out.println("Token inválido");
+            // Validamos el token contra los datos del usuario
+            if (!jwtService.isTokenValid(jwt, userDetails)) {
+               response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido.");
+                return;
             }
+
+            // Creamos el token de autenticación de Spring
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        } catch (Exception e) {
+            System.out.println("Error durante la autenticación: " + e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error de autenticación: " + e.getMessage());
+            return;
         }
 
         filterChain.doFilter(request, response);
+
     }
 }

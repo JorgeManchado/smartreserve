@@ -27,22 +27,20 @@ export class NotificacionesBellComponent implements OnInit {
   ngOnInit(): void {
     this.cargarNotificaciones();
 
-    console.log('notificaciones-bell');
-
     const token = localStorage.getItem('token');
 
-    console.log('notificaciones-bell 2');
-
     if (token && this.idUsuario) {
-      console.log('notificaciones-bell3');
       this.webSocketService.conectar(this.idUsuario, token);
-
       this.webSocketService.notificaciones$.subscribe((nueva) => {
-        this.notificaciones.unshift(nueva);
+        const yaExiste = this.notificaciones.some(
+          (n) => n.idNotificacion === nueva.idNotificacion
+        );
+
+        if (!yaExiste) {
+          this.notificaciones.unshift(nueva);
+        }
       });
     }
-
-    console.log('notificaciones-bell4');
   }
 
   cargarNotificaciones() {

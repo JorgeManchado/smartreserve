@@ -5,7 +5,7 @@
 >
   <!-- Datos -->
   <div class="row g-4">
-    <div class="col-md-6">
+    <div class="col-12 col-md-6">
       <label class="form-label">Nombre completo</label>
       <input
         formControlName="nombre"
@@ -13,7 +13,7 @@
         class="form-control form-control-sm"
       />
     </div>
-    <div class="col-md-6">
+    <div class="col-12 col-md-6">
       <label class="form-label">Correo electrónico</label>
       <input
         formControlName="email"
@@ -21,7 +21,7 @@
         class="form-control form-control-sm"
       />
     </div>
-    <div class="col-md-6">
+    <div class="col-12 col-md-6">
       <label class="form-label">Teléfono</label>
       <input
         formControlName="telefono"
@@ -29,7 +29,7 @@
         class="form-control form-control-sm"
       />
     </div>
-    <div class="col-md-6">
+    <div class="col-12 col-md-6">
       <label class="form-label">Dirección</label>
       <input
         formControlName="direccion"
@@ -40,14 +40,16 @@
   </div>
 
   <!-- Botones -->
-  <div class="mt-4 d-flex justify-content-end gap-2">
+  <div class="mt-4 d-flex flex-column flex-sm-row justify-content-end gap-2">
     <button
       type="button"
-      class="btn btn-outline-secondary"
+      class="btn btn-outline-secondary btn-auto-width"
       (click)="cancelar()"
     >
       Cancelar
     </button>
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <button type="submit" class="btn btn-primary btn-auto-width">
+      Guardar Cambios
+    </button>
   </div>
 </form>

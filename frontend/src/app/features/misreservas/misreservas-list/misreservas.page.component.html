@@ -1,0 +1,439 @@
+<div class="container py-2">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-calendar-check fs-3 text-primary"></i> Mis Reservas
+  </h2>
+
+  <!-- Barra de búsqueda y botones -->
+  <div class="row gy-2 gx-2 align-items-stretch mb-3">
+    <!-- Buscador -->
+    <div class="col-12 col-md">
+      <div class="input-group h-100">
+        <span class="input-group-text bg-white">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por nombre del espacio..."
+          [(ngModel)]="filtroNombre"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+    </div>
+
+    <!-- Botón Filtros -->
+    <div class="col-6 col-md-auto">
+      <button
+        class="btn btn-outline-secondary w-100 h-100 d-flex align-items-center justify-content-center px-3"
+        (click)="mostrarFiltros = !mostrarFiltros"
+      >
+        <i class="bi bi-funnel me-1"></i> Filtros
+        <i class="bi bi-chevron-down ms-2" *ngIf="!mostrarFiltros"></i>
+        <i class="bi bi-chevron-up ms-2" *ngIf="mostrarFiltros"></i>
+      </button>
+    </div>
+
+    <!-- Botón Nueva reserva -->
+    <div class="col-6 col-md-auto">
+      <button
+        class="btn btn-primary w-100 h-100 d-flex align-items-center justify-content-center px-3"
+        [routerLink]="['/misreservas/nueva']"
+        [queryParams]="{ returnTo: '/misreservas' }"
+        type="button"
+      >
+        <i class="bi bi-plus-lg me-1"></i> Nueva reserva
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros adicionales -->
+  <div *ngIf="mostrarFiltros" class="card p-4 mb-4 shadow-sm">
+    <div class="row g-3 align-items-end">
+      <!-- Nombre de usuario -->
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Nombre de usuario</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ej. Juan Pérez"
+          [(ngModel)]="filtroNombreUsuario"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <!-- Estado -->
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Estado</label>
+        <select
+          class="form-select"
+          [(ngModel)]="filtroEstado"
+          (change)="aplicarFiltro()"
+        >
+          <option [ngValue]="''">Todos</option>
+          <option
+            *ngFor="let estado of estadosReserva"
+            [value]="estado.descripcion"
+          >
+            {{ estado.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Ubicación -->
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary">Ubicación</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ej. Planta 1, Edificio A"
+          [(ngModel)]="filtroUbicacion"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <!-- Número de reserva -->
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Número de reserva</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Ej. 5"
+          [(ngModel)]="filtroIdReserva"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <!-- Tipo de espacio -->
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Tipo de espacio</label
+        >
+        <select
+          class="form-select"
+          [(ngModel)]="filtroTipo"
+          (change)="aplicarFiltro()"
+        >
+          <option [ngValue]="''">Todos</option>
+          <option *ngFor="let tipo of tiposEspacio" [value]="tipo.descripcion">
+            {{ tipo.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Capacidad -->
+      <div class="col-md-4">
+        <label class="form-label fw-normal text-secondary"
+          >Capacidad mínima</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Ej. 10"
+          [(ngModel)]="filtroCapacidad"
+          min="1"
+          (input)="aplicarFiltro()"
+        />
+      </div>
+
+      <!-- Fechas -->
+      <div class="col-md-3">
+        <label class="form-label fw-normal text-secondary">Fecha desde</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtroFechaDesde"
+          (change)="aplicarFiltro()"
+        />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-normal text-secondary">Fecha hasta</label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="filtroFechaHasta"
+          (change)="aplicarFiltro()"
+        />
+      </div>
+    </div>
+
+    <!-- Botones filtros -->
+    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+      <button class="btn btn-outline-secondary px-4" (click)="limpiarFiltros()">
+        Limpiar
+      </button>
+      <button class="btn btn-primary px-4" (click)="aplicarFiltro()">
+        Aplicar
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje si no hay reservas -->
+  <div
+    *ngIf="!cargando && reservas.length === 0"
+    class="text-center text-muted py-5 w-100"
+  >
+    <i class="bi bi-info-circle fs-1 mb-3 d-block"></i>
+    <p class="mb-0">No tienes reservas registradas.</p>
+    <p class="small">
+      Puedes crear una nueva reserva usando el botón "Nueva reserva".
+    </p>
+  </div>
+
+  <!-- Si hay reservas pero los filtros no coinciden -->
+  <div
+    *ngIf="!cargando && reservas.length > 0 && reservasPaginadas.length === 0"
+    class="text-center text-muted py-5 w-100"
+  >
+    <i class="bi bi-search fs-1 mb-3 d-block"></i>
+    <p class="mb-0">No se encontraron reservas con los filtros aplicados.</p>
+    <p class="small">
+      Intenta ajustar los filtros o eliminar alguno para ver más resultados.
+    </p>
+  </div>
+
+  <!-- Tarjetas -->
+  <div *ngIf="reservasPaginadas.length > 0" class="row gy-4">
+    <div
+      class="col-12 col-sm-6 col-md-4"
+      *ngFor="let reserva of reservasPaginadas"
+    >
+      <div
+        class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative hover-card"
+      >
+        <span
+          class="position-absolute top-0 end-0 m-2 badge rounded-pill px-3 py-1 fw-normal"
+          [style.backgroundColor]="reserva.estado.bgcolor"
+          [style.color]="reserva.estado.color"
+        >
+          {{ reserva.estado.descripcion }}
+        </span>
+
+        <img
+          [src]="getImagenUrl(reserva.espacio.imagen)"
+          class="card-img-top object-fit-cover"
+          style="max-height: 200px"
+          [alt]="reserva.espacio.nombre"
+        />
+
+        <div class="card-body pb-2 position-relative">
+          <div class="mb-2 pe-4">
+            <h6 class="fw-semibold text-muted mb-1">
+              {{ reserva.espacio.nombre }}
+            </h6>
+            <small class="text-secondary"
+              >{{ reserva.espacio.tipo.descripcion }} • Capacidad:
+              {{ reserva.espacio.capacidad }} personas</small
+            >
+            <small class="text-muted d-block"
+              >Reserva #{{ reserva.idReserva }} -
+              {{ reserva.usuario.nombre }}</small
+            >
+          </div>
+
+          <div
+            *ngIf="reserva.estado.descripcion === 'Completada'"
+            class="position-absolute top-0 end-0 mt-2 me-2"
+            (click)="abrirComentarioModal(reserva)"
+            style="cursor: pointer"
+          >
+            <div class="comentario-icon-wrapper">
+              <i class="bi fs-5 bi-chat-left-text text-primary"></i>
+              <span
+                *ngIf="tieneComentarios(reserva.idReserva!)"
+                class="comentario-badge bg-danger text-white"
+                >{{ obtenerCantidadComentarios(reserva.idReserva!) }}</span
+              >
+            </div>
+          </div>
+
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-calendar me-1"></i>
+            {{ reserva.fechaInicio | date : "longDate" }}
+          </p>
+          <p class="mb-1 text-secondary small">
+            <i class="bi bi-clock me-1"></i>
+            {{ reserva.fechaInicio | date : "HH:mm" }} -
+            {{ reserva.fechaFin | date : "HH:mm" }}
+          </p>
+          <p class="mb-0 text-secondary small">
+            <i class="bi bi-geo-alt me-1"></i> {{ reserva.espacio.ubicacion }}
+          </p>
+
+          <hr class="my-3" />
+
+          <div
+            class="d-flex justify-content-between px-1 text-sm flex-wrap gap-2"
+          >
+            <span
+              *ngIf="reserva.estado.descripcion === 'Pendiente'"
+              class="text-danger-soft small fw-normal d-flex align-items-center hover-cancel"
+              role="button"
+              (click)="openConfirmModal('cancel', reserva)"
+            >
+              <i class="bi bi-x-circle me-1"></i> Cancelar
+            </span>
+            <span
+              *ngIf="reserva.estado.descripcion === 'Pendiente'"
+              class="text-success small fw-normal d-flex align-items-center hover-confirm"
+              role="button"
+              (click)="confirmarReserva(reserva)"
+            >
+              <i class="bi bi-check2-circle me-1"></i> Confirmar
+            </span>
+            <span
+              *ngIf="
+                ['Completada', 'Cancelada', 'No utilizada'].includes(
+                  reserva.estado.descripcion
+                )
+              "
+              class="text-primary small fw-normal d-flex align-items-center w-100 justify-content-center hover-action"
+              [routerLink]="['/misreservas/nueva']"
+              [state]="{ espacioId: reserva.espacio.idEspacio }"
+            >
+              <i class="bi bi-arrow-repeat me-1"></i> Reservar de nuevo
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginación -->
+    <div
+      class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 small text-muted gap-2"
+    >
+      <div>
+        Mostrando {{ rangoInicio + 1 }} -
+        {{ rangoFin > totalReservas ? totalReservas : rangoFin }} de
+        {{ totalReservas }} resultados
+      </div>
+      <div class="d-flex gap-2">
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="paginaAnterior()"
+          [disabled]="paginaActual === 0"
+        >
+          <i class="bi bi-chevron-left"></i> Anterior
+        </button>
+        <button
+          class="btn btn-primary btn-sm"
+          (click)="paginaSiguiente()"
+          [disabled]="rangoFin >= totalReservas"
+        >
+          Siguiente <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de comentarios -->
+  <div
+    class="modal fade"
+    id="comentarioModal"
+    tabindex="-1"
+    aria-labelledby="comentarioModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow border-0">
+        <div class="modal-header bg-light border-0 px-4 pt-4">
+          <h5
+            class="modal-title fw-semibold text-dark"
+            id="comentarioModalLabel"
+          >
+            {{
+              soloLecturaComentario
+                ? "Comentario enviado"
+                : "Dejar un comentario"
+            }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+
+        <div class="modal-body px-4 pt-2 pb-0">
+          <div class="mb-4 text-center">
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-star-fill text-warning': star <= valoracionSeleccionada,
+                  'bi-star text-muted': star > valoracionSeleccionada
+                }"
+                style="font-size: 1.75rem; cursor: pointer"
+                (click)="!soloLecturaComentario && seleccionarValoracion(star)"
+              ></i>
+            </ng-container>
+          </div>
+
+          <div class="form-floating">
+            <textarea
+              class="form-control"
+              id="comentarioTexto"
+              style="height: 120px"
+              [(ngModel)]="comentarioTexto"
+              placeholder="Escribe tu comentario"
+              [readonly]="soloLecturaComentario"
+              required
+              #comentarioInput="ngModel"
+              [ngClass]="{
+                'is-invalid':
+                  comentarioInput.invalid &&
+                  (comentarioInput.touched || intentoEnviarComentario)
+              }"
+            ></textarea>
+            <label for="comentarioTexto">Escribe tu comentario</label>
+            <div class="invalid-feedback">El comentario es obligatorio.</div>
+          </div>
+        </div>
+
+        <div
+          class="modal-footer border-0 px-4 py-3 d-flex justify-content-between"
+        >
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cerrar
+          </button>
+          <button
+            *ngIf="!soloLecturaComentario"
+            class="btn btn-primary"
+            (click)="guardarComentario()"
+            [disabled]="
+              valoracionSeleccionada === 0 || comentarioTexto.trim() === ''
+            "
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <app-confirm-modal
+    [modalId]="modalConfig.modalId"
+    [type]="modalConfig.type"
+    [title]="modalConfig.title"
+    [message]="modalConfig.message"
+    [confirmText]="modalConfig.confirmText"
+    [cancelText]="modalConfig.cancelText"
+    [idReserva]="reservaPendiente?.idReserva"
+    (onConfirm)="
+      modalConfig.type === 'cancel'
+        ? cancelarReservaConfirmada()
+        : confirmarReservaConfirmada()
+    "
+    (onCancel)="reservaPendiente = null"
+  >
+  </app-confirm-modal>
+</div>

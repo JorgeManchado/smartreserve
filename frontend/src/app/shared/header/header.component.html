@@ -22,16 +22,6 @@
         <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.ADMIN">
           <a
             class="nav-link d-flex align-items-center"
-            routerLink="/usuarios"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <i class="bi bi-people-fill me-1"></i> Usuarios
-          </a>
-        </li>
-        <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.ADMIN">
-          <a
-            class="nav-link d-flex align-items-center"
             routerLink="/dashboard"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
@@ -39,6 +29,17 @@
             <i class="bi bi-bar-chart-line-fill me-1"></i> Dashboard
           </a>
         </li>
+        <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.ADMIN">
+          <a
+            class="nav-link d-flex align-items-center"
+            routerLink="/usuarios"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="bi bi-people-fill me-1"></i> Usuarios
+          </a>
+        </li>
+
         <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.ADMIN">
           <a
             class="nav-link d-flex align-items-center"
@@ -61,6 +62,17 @@
           </a>
         </li>
 
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center"
+            routerLink="/calendario-reservas"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="bi bi-calendar-date-fill me-1"></i> Calendario
+          </a>
+        </li>
+
         <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.EMPLEADO">
           <a
             class="nav-link d-flex align-items-center"
@@ -68,7 +80,18 @@
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <i class="bi bi-calendar-event-fill me-1"></i> Mis reservas
+            <i class="bi bi-calendar-check-fill me-1"></i> Reservas
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.EMPLEADO">
+          <a
+            class="nav-link d-flex align-items-center"
+            routerLink="/espacios-comentarios"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="bi bi-chat-left-text-fill me-1"></i> Comentarios
           </a>
         </li>
 
@@ -79,22 +102,11 @@
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <i class="bi bi-person-circle me-1"></i> Gestión de Perfil
+            <i class="bi bi-person-circle me-1"></i> Perfil
           </a>
         </li>
 
-        <li class="nav-item" *ngIf="auth.getRoleValue() === UserRol.EMPLEADO">
-          <a
-            class="nav-link d-flex align-items-center"
-            routerLink="/reservas"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <i class="bi bi-calendar-check-fill me-1"></i> Reservas
-          </a>
-        </li>
-
-        <!-- 🔔 Campana de notificaciones -->
+        <!-- Campana de notificaciones -->
         <li class="nav-item" *ngIf="auth.getIdUsuarioValue() as idUsuario">
           <app-notificaciones-bell
             [idUsuario]="idUsuario"
@@ -120,7 +132,7 @@
           >
             <li>
               <button
-                class="dropdown-item text-danger d-flex align-items-center"
+                class="dropdown-item text-primary d-flex align-items-center"
                 (click)="logout()"
               >
                 <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión

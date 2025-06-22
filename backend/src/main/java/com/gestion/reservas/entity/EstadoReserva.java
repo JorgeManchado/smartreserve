@@ -15,4 +15,6 @@ public class EstadoReserva {
     private Long idEstado;
 
     private String descripcion;
+    private String color;
+    private String bgcolor;
 }

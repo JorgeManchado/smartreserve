@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Reserva } from '../models/reserva.model';
+import { ReservaCalendario } from '../models/reservacalendario.model';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +31,11 @@ export class ReservaService {
 
   deleteReserva(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getCalendario(desde: string, hasta: string): Observable<ReservaCalendario[]> {
+    return this.http.get<ReservaCalendario[]>(
+      `${this.apiUrl}/calendario?desde=${desde}&hasta=${hasta}`
+    );
   }
 }

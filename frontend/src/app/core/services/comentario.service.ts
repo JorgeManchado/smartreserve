@@ -21,4 +21,12 @@ export class ComentarioService {
   anular(id: number): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/anular/${id}`, {});
   }
+
+  crearComentario(comentario: Comentario): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, comentario);
+  }
+
+  actualizarComentario(id: number, comentario: Comentario): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, comentario);
+  }
 }

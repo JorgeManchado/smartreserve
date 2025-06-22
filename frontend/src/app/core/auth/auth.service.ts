@@ -5,12 +5,13 @@ import { throwError } from 'rxjs/internal/observable/throwError';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { tap } from 'rxjs/internal/operators/tap';
 import { environment } from '../../../environments/environment';
+import { AuthStore } from '../../core/auth/auth.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/api/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public auth: AuthStore) {}
 
   login(email: string, password: string): Observable<{ token: string }> {
     return this.http
@@ -21,16 +22,25 @@ export class AuthService {
         }),
         catchError((error) => {
           console.error('Error en login:', error);
-          return throwError(
-            () =>
-              new Error('Credenciales incorrectas o servidor no disponible.')
-          );
+
+          let mensaje = 'Servidor no disponible.';
+
+          if (error.status === 403 || error.status === 401) {
+            if (
+              error.error &&
+              typeof error.error === 'object' &&
+              error.error.message
+            ) {
+              mensaje = error.error.message;
+            }
+          }
+
+          return throwError(() => new Error(mensaje));
         })
       );
   }
 
   logout() {
-    // this.authStore.logout();
-    console.log('prueeba');
+    this.auth.logout();
   }
 }

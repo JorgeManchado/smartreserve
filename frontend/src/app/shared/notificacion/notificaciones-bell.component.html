@@ -1,5 +1,5 @@
 <div class="position-relative">
-  <!-- Campana -->
+  <!-- Icono de campana -->
   <i
     class="bi bi-bell-fill fs-4"
     role="button"
@@ -8,7 +8,7 @@
     (click)="toggleLista()"
   ></i>
 
-  <!-- Badge de contador -->
+  <!-- Contador de notificaciones -->
   <span
     class="badge bg-danger position-absolute top-0 start-100 translate-middle"
     *ngIf="notificaciones.length > 0"
@@ -16,48 +16,64 @@
     {{ notificaciones.length }}
   </span>
 
-  <!-- Panel desplegable -->
+  <!-- Panel desplegable de notificaciones -->
   <div
-    class="dropdown-menu show p-2 shadow"
+    class="dropdown-menu show shadow"
     *ngIf="mostrarLista"
-    style="position: absolute; right: 0; top: 100%; width: 300px; z-index: 1050"
+    style="
+      position: absolute;
+      right: 0;
+      top: 100%;
+      width: 320px;
+      z-index: 1050;
+      border-radius: 1rem;
+      padding: 1rem;
+    "
   >
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <strong>Notificaciones</strong>
+    <!-- Encabezado -->
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0 text-muted fw-semibold">Notificaciones</h6>
       <div class="d-flex align-items-center gap-2">
-        <button
-          class="btn btn-sm btn-outline-secondary"
-          (click)="marcarTodasComoLeidas()"
+        <a
           *ngIf="notificaciones.length > 0"
+          (click)="marcarTodasComoLeidas()"
+          class="link-inline"
         >
-          Marcar todas
-        </button>
-        <!-- Aspa para cerrar -->
+          <i class="bi bi-check2-circle"></i> Marcar todas
+        </a>
         <button
-          class="btn btn-sm btn-outline-danger"
+          class="btn btn-sm btn-outline-danger btn-close-noti"
           (click)="toggleLista()"
           title="Cerrar"
         >
-          <i class="bi bi-x"></i>
+          <i class="bi bi-x-lg"></i>
         </button>
       </div>
     </div>
 
+    <!-- Mensaje cuando no hay notificaciones -->
     <p *ngIf="notificaciones.length === 0" class="text-muted mb-0">
       No hay nuevas notificaciones.
     </p>
 
+    <!-- Lista de notificaciones -->
     <div
       *ngFor="let noti of notificaciones"
-      class="alert alert-light d-flex justify-content-between align-items-start mb-2"
+      class="recomendacion-box d-flex gap-3"
     >
-      <span class="text-dark small">{{ noti.mensaje }}</span>
-      <button
-        class="btn btn-sm btn-outline-primary"
-        (click)="marcarComoLeida(noti)"
-      >
-        Marcar
-      </button>
+      <div class="icon-circle bg-primary bg-opacity-10 text-primary">
+        <i class="bi bi-bell"></i>
+      </div>
+      <div class="flex-grow-1">
+        <p class="mb-1 text-muted small">{{ noti.mensaje }}</p>
+        <button
+          class="btn btn-link p-0 text-primary"
+          (click)="marcarComoLeida(noti)"
+        >
+          <i class="bi bi-check2-circle me-1"></i> Marcar como leída
+        </button>
+      </div>
     </div>
   </div>
 </div>

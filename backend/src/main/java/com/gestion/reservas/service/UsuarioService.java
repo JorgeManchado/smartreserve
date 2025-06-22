@@ -20,6 +20,8 @@ public interface UsuarioService {
     Optional<UsuarioResponseDTO> actualizarPerfil(Long id, PerfilInfoDTO dto);
     UsuarioResponseDTO registrarUsuario(UsuarioRequestDTO dto);
     Optional<UsuarioResponseDTO> actualizarUsuario(Long id, UsuarioRequestDTO dto);
+
+    boolean inactivarUsuario(Long idUsuario);
 }
 
 

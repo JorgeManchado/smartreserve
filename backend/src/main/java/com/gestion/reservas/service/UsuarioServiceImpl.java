@@ -5,8 +5,10 @@ import com.gestion.reservas.dto.PerfilInfoDTO;
 import com.gestion.reservas.dto.UsuarioRequestDTO;
 import com.gestion.reservas.dto.UsuarioResponseDTO;
 import com.gestion.reservas.entity.Usuario;
+import com.gestion.reservas.entity.EstadoUsuario;
 import com.gestion.reservas.mapper.UsuarioMapper;
 import com.gestion.reservas.repository.UsuarioRepository;
+import com.gestion.reservas.repository.EstadoUsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final NotificacionService notificacionService;
     private final UsuarioMapper usuarioMapper;
+    private final EstadoUsuarioRepository estadoUsuarioRepository;
 
     @Override
     public List<Usuario> findAll() {
@@ -148,6 +151,31 @@ public class UsuarioServiceImpl implements UsuarioService {
             return toDTO(actualizado);
         });
     }
+
+    public boolean inactivarUsuario(Long idUsuario) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+
+            Optional<EstadoUsuario> estadoInactivoOpt = estadoUsuarioRepository.findById(2L);
+            if (estadoInactivoOpt.isPresent()) {
+                usuario.setEstado(estadoInactivoOpt.get());
+                usuarioRepository.save(usuario);
+
+                String mensaje = String.format(
+                        "El estado de la cuenta del usuario se ha inactivado el día %s.",
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                );
+                notificacionService.crearYEnviarNotificacion(usuario, mensaje);
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
 
 }
 

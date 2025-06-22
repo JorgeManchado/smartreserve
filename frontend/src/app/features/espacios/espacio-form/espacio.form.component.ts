@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../environments/environment';
 import { Equipamiento } from '../../../core/models/equipamiento.model';
 import { EstadoEspacio } from '../../../core/models/estadoespacio.model';
@@ -15,6 +16,7 @@ import { EquipamientoService } from '../../../core/services/equipamiento.service
 import { EspacioService } from '../../../core/services/espacio.service';
 import { EstadoEspacioService } from '../../../core/services/estadoespacio.service';
 import { TipoEspacioService } from '../../../core/services/tipoespacio.service';
+
 @Component({
   selector: 'app-espacio-form',
   templateUrl: './espacio.form.component.html',
@@ -25,11 +27,11 @@ export class EspacioFormComponent implements OnInit {
   tiposEspacio: TipoEspacio[] = [];
   estadosEspacio: EstadoEspacio[] = [];
   equipamientos: Equipamiento[] = [];
-
   imagenPreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   isEditMode = false;
   idEspacio!: number;
+  estadoIdSeleccionado: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +40,8 @@ export class EspacioFormComponent implements OnInit {
     private estadoService: EstadoEspacioService,
     private equipamientoService: EquipamientoService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -48,19 +51,30 @@ export class EspacioFormComponent implements OnInit {
       ubicacion: ['', Validators.required],
       descripcion: [''],
       idTipoEspacio: ['', Validators.required],
-      idEstado: ['', Validators.required],
-      equipamientos: [[]],
+      equipamientos: [[], [Validators.required, this.minSelectedCheckboxes(1)]],
     });
 
-    this.tipoService
-      .getTiposEspacio()
-      .subscribe((data) => (this.tiposEspacio = data));
-    this.estadoService
-      .getEstadospacio()
-      .subscribe((data) => (this.estadosEspacio = data));
-    this.equipamientoService
-      .getEquipamientos()
-      .subscribe((data) => (this.equipamientos = data));
+    this.tipoService.getTiposEspacio().subscribe((data) => {
+      this.tiposEspacio = data;
+    });
+
+    this.estadoService.getEstadospacio().subscribe((data) => {
+      this.estadosEspacio = data;
+
+      if (!this.isEditMode) {
+        const estadoDisponible = data.find(
+          (e) => e.descripcion === 'Disponible'
+        );
+        console.log(estadoDisponible);
+        if (estadoDisponible) {
+          this.estadoIdSeleccionado = estadoDisponible.idEstado;
+        }
+      }
+    });
+
+    this.equipamientoService.getEquipamientos().subscribe((data) => {
+      this.equipamientos = data;
+    });
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -73,9 +87,10 @@ export class EspacioFormComponent implements OnInit {
           ubicacion: data.ubicacion,
           descripcion: data.descripcion,
           idTipoEspacio: data.tipo?.idTipoEspacio,
-          idEstado: data.estado?.idEstado,
           equipamientos: data.equipamientos?.map((e: any) => e.idEquipamiento),
         });
+
+        this.estadoIdSeleccionado = data.estado?.idEstado || null;
 
         if (data.imagen) {
           this.imagenPreview = `${environment.apiUrl}/uploads/${data.imagen}`;
@@ -84,11 +99,17 @@ export class EspacioFormComponent implements OnInit {
     }
   }
 
+  minSelectedCheckboxes(min = 1) {
+    return (control: any) => {
+      const value = control.value;
+      return value && value.length >= min ? null : { minSelected: true };
+    };
+  }
+
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-
       const reader = new FileReader();
       reader.onload = () => (this.imagenPreview = reader.result);
       reader.readAsDataURL(file);
@@ -108,17 +129,18 @@ export class EspacioFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid || !this.estadoIdSeleccionado) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const formData = new FormData();
-
     const {
       nombre,
       capacidad,
       ubicacion,
       descripcion,
       idTipoEspacio,
-      idEstado,
       equipamientos,
     } = this.form.value;
 
@@ -127,7 +149,7 @@ export class EspacioFormComponent implements OnInit {
     formData.append('ubicacion', ubicacion);
     formData.append('descripcion', descripcion);
     formData.append('idTipoEspacio', idTipoEspacio.toString());
-    formData.append('idEstado', idEstado.toString());
+    formData.append('idEstado', this.estadoIdSeleccionado.toString());
 
     equipamientos.forEach((id: number) => {
       formData.append('equipamientos', id.toString());
@@ -141,7 +163,35 @@ export class EspacioFormComponent implements OnInit {
       ? this.espacioService.updateEspacio(this.idEspacio, formData)
       : this.espacioService.createEspacio(formData);
 
-    request.subscribe(() => this.router.navigate(['/espacios']));
+    request.subscribe(() => {
+      const mensaje = this.isEditMode
+        ? {
+            titulo: 'Espacio actualizado',
+            texto: `El espacio <strong>"${nombre}"</strong> fue actualizado correctamente.`,
+          }
+        : {
+            titulo: 'Espacio creado',
+            texto: `El espacio <strong>"${nombre}"</strong> fue creado correctamente.`,
+          };
+
+      this.toastr.success(
+        `
+    <div class="toast-content">
+      <div class="toast-title">${mensaje.titulo}</div>
+      <div class="toast-message">${mensaje.texto}</div>
+    </div>
+  `,
+        '',
+        {
+          enableHtml: true,
+          toastClass: 'ngx-toastr custom-toast toast-info',
+          closeButton: true,
+          timeOut: 3000,
+        }
+      );
+
+      this.router.navigate(['/espacios']);
+    });
   }
 
   cancelar(): void {

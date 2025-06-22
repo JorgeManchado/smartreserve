@@ -1,0 +1,343 @@
+:host ::ng-deep {
+  .fc {
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    background-color: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .fc-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    background-color: #fff;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+  }
+
+  .fc-toolbar > .fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .fc-toolbar {
+      padding: 0.5rem 0.75rem;
+      gap: 0.4rem;
+    }
+
+    .fc-toolbar > .fc-toolbar-chunk {
+      gap: 0.4rem;
+    }
+
+    .fc-toolbar-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin: 0 0.25rem;
+    }
+
+    .fc-today-button {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 5px;
+    }
+
+    .fc-button-group {
+      background-color: #f4f4f5;
+      border-radius: 6px;
+      padding: 1px;
+      gap: 1px;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+      display: flex;
+      align-items: center;
+    }
+
+    .fc-button-group .fc-button {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 5px;
+    }
+
+    .fc-prev-button,
+    .fc-next-button {
+      font-size: 0.85rem;
+      padding: 2px 6px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .fc-toolbar {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+    }
+
+    .fc-toolbar > .fc-toolbar-chunk {
+      flex: 1 1 33.33%;
+    }
+
+    .fc-toolbar > .fc-toolbar-chunk:nth-child(1) {
+      justify-content: flex-start;
+    }
+
+    .fc-toolbar > .fc-toolbar-chunk:nth-child(2) {
+      justify-content: center;
+    }
+
+    .fc-toolbar > .fc-toolbar-chunk:nth-child(3) {
+      justify-content: flex-end;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .fc-toolbar {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.3rem 0.5rem !important;
+      gap: 0.25rem !important;
+    }
+
+    .fc-toolbar > .fc-toolbar-chunk {
+      flex: 0 1 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem !important;
+    }
+
+    .fc-toolbar-title {
+      font-size: 0.75rem !important;
+      font-weight: 500 !important;
+      white-space: nowrap;
+      margin: 0 0.2rem !important;
+      color: #1f2937;
+    }
+
+    .fc-today-button {
+      font-size: 0.65rem !important;
+      padding: 3px 7px !important;
+      border-radius: 5px !important;
+    }
+
+    .fc-button-group {
+      background-color: #f4f4f5;
+      border-radius: 5px !important;
+      padding: 0 !important;
+      gap: 3px !important;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+      display: flex;
+      align-items: center;
+    }
+
+    .fc-button-group .fc-button {
+      font-size: 0.65rem !important;
+      padding: 3px 7px !important;
+      border-radius: 5px !important;
+    }
+
+    .fc-prev-button,
+    .fc-next-button {
+      font-size: 0.85rem !important;
+      padding: 2px 5px !important;
+      width: 22px !important;
+      height: 22px !important;
+    }
+  }
+
+  .fc-toolbar-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .fc-today-button {
+    background-color: #f4f3ff;
+    color: #7c3aed;
+    border: none;
+    border-radius: 12px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: none;
+  }
+
+  .fc-prev-button,
+  .fc-next-button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: #6b7280;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+
+  .fc-prev-button:hover,
+  .fc-next-button:hover {
+    background-color: #f3f4f6;
+  }
+
+  .fc-button-group {
+    background-color: #f4f4f5;
+    border-radius: 12px;
+    padding: 2px;
+    box-shadow: inset 0 0 0 1px #e5e7eb;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .fc-button-group .fc-button {
+    background: transparent;
+    color: #374151;
+    border: none;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .fc-button-group .fc-button.fc-button-active {
+    background-color: #f4f3ff;
+    color: #7c3aed;
+  }
+
+  .fc-daygrid-day-events {
+    max-height: 6.5rem;
+    overflow: hidden !important;
+  }
+
+  .fc-event.evento-renderizado {
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: none;
+    padding: 3px 4px;
+    border-radius: 6px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fc-event.evento-renderizado > div {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .fc-event.evento-renderizado span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .fc-scrollgrid {
+    border-collapse: collapse;
+  }
+
+  .fc-col-header,
+  .fc-scrollgrid-section-header th,
+  .fc-scrollgrid-section-header td {
+    border-bottom: 1px solid #e5e7eb !important;
+    background-color: #fff;
+  }
+
+  .fc-scrollgrid td,
+  .fc-scrollgrid th {
+    border: 1px solid #e5e7eb;
+  }
+
+  .fc-theme-standard .fc-scrollgrid {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+  }
+
+  .fc-theme-standard .fc-scrollgrid .fc-daygrid-day {
+    background-color: #fff;
+  }
+
+  .legend-box {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background-color: #fff;
+    padding: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .legend-label {
+    font-size: 0.75rem;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .legend-circle {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .modal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(31, 41, 55, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-content .acciones {
+    justify-content: flex-end !important;
+  }
+
+  .modal-content .acciones .btn {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.85rem !important;
+    min-width: auto !important;
+    width: auto !important;
+  }
+
+  .reserva-card {
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .estado-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    margin-top: 0.3rem;
+    flex-shrink: 0;
+  }
+}

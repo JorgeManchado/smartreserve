@@ -32,6 +32,12 @@
           formControlName="nombre"
           placeholder="Ej. Sala de reuniones A"
         />
+        <div
+          class="text-danger small mt-1"
+          *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid"
+        >
+          El nombre del espacio es obligatorio.
+        </div>
       </div>
 
       <div class="row g-3">
@@ -43,6 +49,14 @@
             formControlName="capacidad"
             min="1"
           />
+          <div
+            class="text-danger small mt-1"
+            *ngIf="
+              form.get('capacidad')?.touched && form.get('capacidad')?.invalid
+            "
+          >
+            Ingrese una capacidad válida (mínimo 1).
+          </div>
         </div>
         <div class="col-md-6">
           <label class="form-label">Tipo de espacio</label>
@@ -55,6 +69,15 @@
               {{ tipo.descripcion }}
             </option>
           </select>
+          <div
+            class="text-danger small mt-1"
+            *ngIf="
+              form.get('idTipoEspacio')?.touched &&
+              form.get('idTipoEspacio')?.invalid
+            "
+          >
+            Seleccione un tipo de espacio.
+          </div>
         </div>
       </div>
 
@@ -66,19 +89,14 @@
           formControlName="ubicacion"
           placeholder="Ej. Planta 1, Edificio A"
         />
-      </div>
-
-      <div class="mt-3">
-        <label class="form-label">Estado</label>
-        <select class="form-select" formControlName="idEstado">
-          <option value="">Seleccione...</option>
-          <option
-            *ngFor="let estado of estadosEspacio"
-            [value]="estado.idEstado"
-          >
-            {{ estado.descripcion }}
-          </option>
-        </select>
+        <div
+          class="text-danger small mt-1"
+          *ngIf="
+            form.get('ubicacion')?.touched && form.get('ubicacion')?.invalid
+          "
+        >
+          La ubicación es obligatoria.
+        </div>
       </div>
 
       <div class="mt-3">
@@ -109,6 +127,15 @@
               </div>
             </div>
           </div>
+        </div>
+        <div
+          class="text-danger small mt-2"
+          *ngIf="
+            form.get('equipamientos')?.touched &&
+            form.get('equipamientos')?.errors?.['minSelected']
+          "
+        >
+          Debes seleccionar al menos un equipamiento.
         </div>
       </div>
 

@@ -16,7 +16,7 @@ export class HeaderComponent {
   UserRol = UserRole;
 
   constructor(public auth: AuthStore, private router: Router) {
-    console.log(this.auth.getNameValue());
+    //console.log(this.auth.getNameValue());
   }
 
   logout() {

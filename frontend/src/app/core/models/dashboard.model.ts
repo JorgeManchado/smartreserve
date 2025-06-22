@@ -11,6 +11,8 @@ export interface UltimaReserva {
   fecha: string;
   duracion: string;
   estado: string;
+  color: string;
+  bgcolor: string;
 }
 
 export interface TipoSalaDistribucion {

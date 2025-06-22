@@ -1,12 +1,17 @@
 package com.gestion.reservas.dto;
 
-import lombok.Data;
+import lombok.*;
+
 import java.util.List;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EspacioResponseDTO {
     private Long idEspacio;
     private String nombre;

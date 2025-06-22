@@ -41,7 +41,7 @@ public class EspacioServiceImpl implements EspacioService {
 
     @Override
     public List<EspacioResponseDTO> findAll() {
-        return espacioRepo.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+        return espacioRepo.findAllByOrderByIdEspacioDesc().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -218,6 +218,17 @@ public class EspacioServiceImpl implements EspacioService {
         dto.setEquipamientos(equipamientoDTOs);
 
         return dto;
+    }
+
+    public void updateEstado(Long idEspacio, Long idEstado) {
+        Espacio espacio = espacioRepo.findById(idEspacio)
+                .orElseThrow(() -> new NoSuchElementException("Espacio no encontrado"));
+
+        EstadoEspacio nuevoEstado = estadoRepo.findById(idEstado)
+                .orElseThrow(() -> new NoSuchElementException("Estado no encontrado"));
+
+        espacio.setEstado(nuevoEstado);
+        espacioRepo.save(espacio);
     }
 
 

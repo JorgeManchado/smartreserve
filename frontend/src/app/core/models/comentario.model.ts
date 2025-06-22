@@ -1,14 +1,14 @@
 export interface Comentario {
-  idComentario: number;
+  idComentario?: number;
   texto: string;
   valoracion: number;
-  fecha: string;
+  fecha?: string;
 
-  estadoDescripcion: string;
-  idEstado: number;
+  estadoDescripcion?: string;
+  idEstado?: number;
 
-  nombreUsuario: string;
-  idUsuario: number;
+  nombreUsuario?: string;
+  idUsuario?: number;
 
   idReserva: number;
 }

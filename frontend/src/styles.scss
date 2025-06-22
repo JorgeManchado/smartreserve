@@ -21,7 +21,54 @@ body {
   flex: 1;
 }
 
-.toast-success {
-  background-color: #cce5ff !important; /* azul clarito */
-  color: #004085 !important; /* azul oscuro para el texto */
+/* INFO */
+.custom-toast.toast-info {
+  background-color: #dbeafe !important; /* azul claro */
+}
+
+.custom-toast.toast-info .toast-title {
+  color: #1f2937 !important;
+}
+
+.custom-toast.toast-info .toast-message {
+  color: #4b5563 !important;
+}
+
+/* SUCCESS */
+.custom-toast.toast-success {
+  background-color: #dcfce7 !important; /* verde claro */
+}
+
+.custom-toast.toast-success .toast-title {
+  color: #14532d !important;
+}
+
+.custom-toast.toast-success .toast-message {
+  color: #166534 !important;
+}
+
+/* ERROR */
+.custom-toast.toast-error {
+  background-color: #fee2e2 !important; /* rojo claro */
+}
+
+.custom-toast.toast-error .toast-title {
+  color: #7f1d1d !important;
+}
+
+.custom-toast.toast-error .toast-message {
+  color: #991b1b !important;
+}
+
+/* WARNING */
+.custom-toast.toast-warning {
+  background-color: #fef9c3 !important; /* amarillo claro */
+}
+
+.custom-toast.toast-warning .toast-title {
+  color: #78350f !important;
+}
+
+.custom-toast.toast-warning .toast-message {
+  color: #92400e !important;
 }

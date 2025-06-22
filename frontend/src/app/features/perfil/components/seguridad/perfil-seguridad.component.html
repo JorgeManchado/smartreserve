@@ -1,4 +1,9 @@
-<form [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()" novalidate>
+<form
+  [formGroup]="passwordForm"
+  (ngSubmit)="cambiarPassword()"
+  novalidate
+  class="password-form"
+>
   <div class="mb-3">
     <label class="form-label">Contraseña actual</label>
     <input
@@ -46,17 +51,17 @@
     <div class="invalid-feedback">Las contraseñas deben coincidir</div>
   </div>
 
-  <div class="d-flex justify-content-end gap-2">
+  <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
     <button
       type="button"
-      class="btn btn-outline-secondary"
+      class="btn btn-outline-secondary btn-auto-width"
       (click)="cancelar()"
     >
       Cancelar
     </button>
     <button
       type="submit"
-      class="btn btn-primary"
+      class="btn btn-primary btn-auto-width"
       [disabled]="passwordForm.invalid"
     >
       Actualizar Contraseña

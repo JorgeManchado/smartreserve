@@ -80,6 +80,8 @@ public class DashboardServiceImpl implements DashboardService {
                             .fecha(r.getFechaInicio().toLocalDate().format(formatter))
                             .duracion(horas + " horas")
                             .estado(r.getEstado().getDescripcion())
+                            .color(r.getEstado().getColor())
+                            .bgcolor(r.getEstado().getBgcolor())
                             .build();
                 })
                 .collect(Collectors.toList());

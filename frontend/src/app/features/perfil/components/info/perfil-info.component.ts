@@ -48,7 +48,23 @@ export class PerfilInfoComponent implements OnInit {
       this.perfilService
         .actualizarPerfil(this.idUsuario, datos)
         .subscribe(() => {
-          this.toastr.success('Perfil actualizado correctamente', 'Éxito');
+          this.toastr.success(
+            `
+              <div class="toast-content">
+                <div class="toast-title">Perfil actualizado</div>
+                <div class="toast-message">
+                  El perfil se ha actualizado correctamente.
+                </div>
+              </div>
+            `,
+            '',
+            {
+              enableHtml: true,
+              toastClass: 'ngx-toastr custom-toast toast-info',
+              closeButton: true,
+              timeOut: 3000,
+            }
+          );
         });
     }
   }
@@ -56,7 +72,23 @@ export class PerfilInfoComponent implements OnInit {
   cancelar(): void {
     if (this.datosOriginales) {
       this.infoForm.patchValue(this.datosOriginales);
-      this.toastr.info('Cambios descartados', 'Cancelado');
+      this.toastr.info(
+        `
+          <div class="toast-content">
+            <div class="toast-title">Cambios Cancelados</div>
+            <div class="toast-message">
+               Los cambios han sido descartados correctamente.
+            </div>
+          </div>
+        `,
+        '',
+        {
+          enableHtml: true,
+          toastClass: 'ngx-toastr custom-toast toast-info',
+          closeButton: true,
+          timeOut: 3000,
+        }
+      );
     }
   }
 }

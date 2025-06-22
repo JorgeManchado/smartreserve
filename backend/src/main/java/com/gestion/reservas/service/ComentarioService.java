@@ -9,4 +9,5 @@ public interface ComentarioService {
     List<ComentarioDTO> listarComentarios();
     void aprobarComentario(Long id);
     void anularComentario(Long id);
+    ComentarioDTO crearComentario(ComentarioDTO dto);
 }

@@ -11,12 +11,9 @@ import org.springframework.web.socket.config.annotation.*;
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
-
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final JwtService jwtService;
-
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -27,8 +24,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
+                .setAllowedOriginPatterns(
+                        "http://localhost:4200",
+                        "https://gestionreservas.netlify.app"
+                )
                 .addInterceptors(new JwtHandshakeInterceptor(jwtService))
                 .withSockJS();
     }
+
 }

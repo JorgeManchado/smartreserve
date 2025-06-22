@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { EstadoUsuario } from '../../../core/models/estadousuario.model';
 import { Rol } from '../../../core/models/rol.model';
 import { UsuarioRequestDTO } from '../../../core/models/usuario-request.dto';
@@ -34,7 +35,8 @@ export class UsuarioFormComponent implements OnInit {
     private estadoUsuarioService: EstadoUsuarioService,
     private rolService: RolService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -84,22 +86,62 @@ export class UsuarioFormComponent implements OnInit {
 
     if (this.isEditMode) {
       this.usuarioService.updateUsuario(this.usuarioId!, usuario).subscribe({
-        next: () => this.router.navigate(['/usuarios']),
+        next: () => {
+          this.toastr.success(
+            `
+            <div class="toast-content">
+              <div class="toast-title">Usuario actualizado</div>
+              <div class="toast-message">
+                El usuario <strong>"${usuario.nombre}"</strong> fue actualizado correctamente.
+              </div>
+            </div>
+          `,
+            '',
+            {
+              enableHtml: true,
+              toastClass: 'ngx-toastr custom-toast toast-info',
+              closeButton: true,
+              timeOut: 3000,
+            }
+          );
+
+          this.router.navigate(['/usuarios']);
+        },
         error: (err) => {
           if (err.status === 409) {
-            this.errorMessage = err.error; // El backend devuelve el texto: "El correo electrónico ya está registrado."
+            this.errorMessage = err.error;
           } else {
-            this.errorMessage = 'Ocurrió un error al crear el usuario.';
+            this.errorMessage = 'Ocurrió un error al actualizar el usuario.';
           }
           console.error(err);
         },
       });
     } else {
       this.usuarioService.createUsuario(usuario).subscribe({
-        next: () => this.router.navigate(['/usuarios']),
+        next: () => {
+          this.toastr.success(
+            `
+            <div class="toast-content">
+              <div class="toast-title">Usuario creado</div>
+              <div class="toast-message">
+                El usuario <strong>"${usuario.nombre}"</strong> fue creado correctamente.
+              </div>
+            </div>
+          `,
+            '',
+            {
+              enableHtml: true,
+              toastClass: 'ngx-toastr custom-toast toast-info',
+              closeButton: true,
+              timeOut: 3000,
+            }
+          );
+
+          this.router.navigate(['/usuarios']);
+        },
         error: (err) => {
           if (err.status === 409) {
-            this.errorMessage = err.error; // El backend devuelve el texto: "El correo electrónico ya está registrado."
+            this.errorMessage = err.error;
           } else {
             this.errorMessage = 'Ocurrió un error al crear el usuario.';
           }

@@ -1,11 +1,14 @@
 package com.gestion.reservas.controller;
 
+import com.gestion.reservas.dto.ReservaCalendarioDTO;
 import com.gestion.reservas.dto.ReservaDTO;
 import com.gestion.reservas.service.ReservaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -61,6 +64,15 @@ public class ReservaController {
 
         reservaService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/calendario")
+    public ResponseEntity<List<ReservaCalendarioDTO>> getReservasParaCalendario(
+            @RequestParam("desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
+            @RequestParam("hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta) {
+
+        List<ReservaCalendarioDTO> reservas = reservaService.obtenerReservasEntreFechas(desde, hasta);
+        return ResponseEntity.ok(reservas);
     }
 }
 

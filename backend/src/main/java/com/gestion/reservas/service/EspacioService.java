@@ -27,4 +27,5 @@ public interface EspacioService {
     );
 
     void delete(Long id);
+    void updateEstado(Long idEspacio, Long idEstado);
 }

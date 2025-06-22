@@ -2,8 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Usuario } from '../../../core/models/usuario.model';
+import { MisReservaService } from '../../../core/services/misreserva.service';
 import { UsuarioService } from '../../../core/services/usuario.service';
+
 declare var bootstrap: any;
 @Component({
   selector: 'app-usuarios',
@@ -18,6 +21,9 @@ export class UsuariosPageComponent implements OnInit {
   usuariosPaginados: Usuario[] = [];
   usuarioSeleccionado: Usuario | null = null;
 
+  tieneReservasUsuario: boolean = false;
+  mostrarModalInactivar: boolean = false;
+
   filtro = '';
   paginaActual = 0;
   tamanioPagina = 10;
@@ -31,12 +37,19 @@ export class UsuariosPageComponent implements OnInit {
     fechaHasta: '',
   };
 
-  constructor(private usuarioService: UsuarioService) {}
+  cargando: boolean = true;
+
+  constructor(
+    private usuarioService: UsuarioService,
+    private misReservaService: MisReservaService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.usuarioService.getUsuarios().subscribe((data) => {
       this.usuarios = data;
       this.aplicarFiltro();
+      this.cargando = false;
     });
   }
 
@@ -141,47 +154,148 @@ export class UsuariosPageComponent implements OnInit {
     return `${inicio} a ${fin}`;
   }
 
-  eliminarUsuario(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-      this.usuarioService.deleteUsuario(id).subscribe({
-        next: () => {
-          this.usuarios = this.usuarios.filter((u) => u.idUsuario !== id);
-          this.aplicarFiltro();
-        },
-        error: (err) => {
-          console.error('Error al eliminar usuario:', err);
-          alert('No se pudo eliminar el usuario.');
-        },
+  eliminarUsuario(usuario: Usuario): void {
+    this.misReservaService
+      .getReservasPorUsuario(usuario.idUsuario)
+      .subscribe((reservas) => {
+        if (reservas.length > 0) {
+          const confirmarInactivar = confirm(
+            `El usuario "${usuario.nombre}" tiene reservas registradas.\n¿Desea inactivarlo?`
+          );
+
+          if (confirmarInactivar) {
+            this.usuarioService
+              .inactivarUsuario(usuario.idUsuario)
+              .subscribe(() => {
+                usuario.estado = 'Inactivo';
+                this.aplicarFiltro();
+              });
+          }
+        } else {
+          const confirmarEliminar = confirm(
+            `¿Está seguro de que desea eliminar al usuario "${usuario.nombre}"?`
+          );
+
+          if (confirmarEliminar) {
+            this.usuarioService
+              .deleteUsuario(usuario.idUsuario)
+              .subscribe(() => {
+                this.usuarios = this.usuarios.filter(
+                  (u) => u.idUsuario !== usuario.idUsuario
+                );
+                this.aplicarFiltro();
+              });
+          }
+        }
       });
-    }
   }
 
   abrirModalConfirmacion(usuario: Usuario) {
+    if (usuario.estado === 'Inactivo') {
+      this.toastr.info(
+        `              
+          <div class="toast-content">
+            <div class="toast-title">Eliminar Usuario</div>
+            <div class="toast-message">
+              No se puede eliminar al usuario <strong>"${usuario.nombre}"</strong> porque ya está inactivo.
+            </div>
+          </div>
+        `,
+        '',
+        {
+          enableHtml: true,
+          toastClass: 'ngx-toastr custom-toast toast-info',
+          closeButton: true,
+          timeOut: 3000,
+        }
+      );
+      return;
+    }
+
     this.usuarioSeleccionado = usuario;
+    this.misReservaService
+      .getReservasPorUsuario(usuario.idUsuario)
+      .subscribe((reservas) => {
+        this.tieneReservasUsuario = reservas.length > 0;
+
+        const modalElement = document.getElementById('confirmDeleteModal');
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        }
+      });
   }
 
-  confirmarEliminacion() {
+  confirmarEliminacion(): void {
     if (!this.usuarioSeleccionado) return;
 
-    this.usuarioService
-      .deleteUsuario(this.usuarioSeleccionado.idUsuario)
-      .subscribe({
-        next: () => {
+    const usuario = this.usuarioSeleccionado;
+
+    this.misReservaService
+      .getReservasPorUsuario(usuario.idUsuario)
+      .subscribe((reservas) => {
+        const tieneReservas = reservas.length > 0;
+        const modalEl = document.getElementById('confirmDeleteModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl!);
+
+        if (tieneReservas) {
+          const confirmarInactivar = confirm(
+            `El usuario "${usuario.nombre}" tiene reservas registradas.\n¿Desea inactivarlo?`
+          );
+
+          if (confirmarInactivar) {
+            this.usuarioService
+              .inactivarUsuario(usuario.idUsuario)
+              .subscribe(() => {
+                usuario.estado = 'Inactivo';
+                this.aplicarFiltro();
+                modalInstance?.hide();
+              });
+          }
+        } else {
+          const confirmarEliminar = confirm(
+            `¿Desea eliminar al usuario "${usuario.nombre}"?`
+          );
+
+          if (confirmarEliminar) {
+            this.usuarioService
+              .deleteUsuario(usuario.idUsuario)
+              .subscribe(() => {
+                this.usuarios = this.usuarios.filter(
+                  (u) => u.idUsuario !== usuario.idUsuario
+                );
+                this.aplicarFiltro();
+                modalInstance?.hide();
+              });
+          }
+        }
+      });
+  }
+
+  procesarConfirmacionUsuario(): void {
+    if (!this.usuarioSeleccionado) return;
+
+    const modalElement = document.getElementById('confirmDeleteModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement!);
+
+    if (this.tieneReservasUsuario) {
+      this.usuarioService
+        .inactivarUsuario(this.usuarioSeleccionado.idUsuario)
+        .subscribe(() => {
+          this.usuarioSeleccionado!.estado = 'Inactivo';
+          this.aplicarFiltro();
+          modalInstance?.hide();
+        });
+    } else {
+      this.usuarioService
+        .deleteUsuario(this.usuarioSeleccionado.idUsuario)
+        .subscribe(() => {
           this.usuarios = this.usuarios.filter(
             (u) => u.idUsuario !== this.usuarioSeleccionado?.idUsuario
           );
           this.aplicarFiltro();
-
-          const modalElement = document.getElementById('confirmDeleteModal');
-          if (modalElement) {
-            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            modalInstance?.hide();
-          }
-        },
-        error: (err) => {
-          console.error('Error al eliminar usuario:', err);
-          alert('No se pudo eliminar el usuario.');
-        },
-      });
+          modalInstance?.hide();
+        });
+    }
   }
 }

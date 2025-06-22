@@ -43,7 +43,24 @@ export class PerfilSeguridadComponent implements OnInit {
       this.passwordForm.value;
 
     if (newPassword !== confirmPassword) {
-      this.toastr.error('Las contraseñas no coinciden', 'Error');
+      this.toastr.info(
+        `
+          <div class="toast-content">
+            <div class="toast-title">Cambio de Contraseña</div>
+            <div class="toast-message">
+              Las contraseñas no coinciden.
+            </div>
+          </div>
+        `,
+        '',
+        {
+          enableHtml: true,
+          toastClass: 'ngx-toastr custom-toast toast-info',
+          closeButton: true,
+          timeOut: 3000,
+        }
+      );
+
       return;
     }
 
@@ -51,7 +68,24 @@ export class PerfilSeguridadComponent implements OnInit {
       .cambiarPassword(this.idUsuario, { currentPassword, newPassword })
       .subscribe({
         next: () => {
-          this.toastr.success('Contraseña actualizada correctamente', 'Éxito');
+          this.toastr.success(
+            `
+              <div class="toast-content">
+                <div class="toast-title">Contraseña actualizada</div>
+                <div class="toast-message">
+                  La contraseña se ha actualizado correctamente.
+                </div>
+              </div>
+            `,
+            '',
+            {
+              enableHtml: true,
+              toastClass: 'ngx-toastr custom-toast toast-info',
+              closeButton: true,
+              timeOut: 3000,
+            }
+          );
+
           this.passwordForm.reset();
         },
         error: (error) => {
@@ -59,9 +93,41 @@ export class PerfilSeguridadComponent implements OnInit {
             error.status === 400 &&
             error.error === 'Contraseña actual incorrecta'
           ) {
-            this.toastr.error('La contraseña actual es incorrecta', 'Error');
+            this.toastr.info(
+              `
+                <div class="toast-content">
+                  <div class="toast-title">Cambio de Contraseña</div>
+                  <div class="toast-message">
+                    La contraseña actual es incorrecta
+                  </div>
+                </div>
+              `,
+              '',
+              {
+                enableHtml: true,
+                toastClass: 'ngx-toastr custom-toast toast-info',
+                closeButton: true,
+                timeOut: 3000,
+              }
+            );
           } else {
-            this.toastr.error('Ocurrió un error inesperado', 'Error');
+            this.toastr.error(
+              `
+                <div class="toast-content">
+                  <div class="toast-title">Cambio de Contraseña</div>
+                  <div class="toast-message">
+                    Ocurrió un error inesperado
+                  </div>
+                </div>
+              `,
+              '',
+              {
+                enableHtml: true,
+                toastClass: 'ngx-toastr custom-toast toast-info',
+                closeButton: true,
+                timeOut: 3000,
+              }
+            );
           }
         },
       });
@@ -69,6 +135,22 @@ export class PerfilSeguridadComponent implements OnInit {
 
   cancelar(): void {
     this.passwordForm.reset();
-    this.toastr.info('Cambios descartados', 'Cancelado');
+    this.toastr.info(
+      `
+        <div class="toast-content">
+          <div class="toast-title">Cambios Cancelados</div>
+          <div class="toast-message">
+             Los cambios han sido descartados correctamente.
+          </div>
+        </div>
+      `,
+      '',
+      {
+        enableHtml: true,
+        toastClass: 'ngx-toastr custom-toast toast-info',
+        closeButton: true,
+        timeOut: 3000,
+      }
+    );
   }
 }

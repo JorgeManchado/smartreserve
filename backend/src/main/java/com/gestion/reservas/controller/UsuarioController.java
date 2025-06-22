@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -73,6 +75,21 @@ public class UsuarioController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PutMapping("/inactivar/{idUsuario}")
+    public ResponseEntity<Map<String, String>> inactivarUsuario(@PathVariable Long idUsuario) {
+        boolean actualizado = usuarioService.inactivarUsuario(idUsuario);
+
+        if (actualizado) {
+            Map<String, String> response = new HashMap<>();
+            response.put("mensaje", "Usuario inactivado correctamente");
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
 
 

@@ -1,0 +1,165 @@
+.fade-in {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vista-previa-sala {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.vista-previa-sala .card-img-top {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.vista-previa-sala .card-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.vista-previa-sala .card-text i {
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .vista-previa-sala .card-img-top {
+    height: 160px;
+  }
+}
+
+.recomendaciones-ia .card {
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.recomendaciones-ia .card-header {
+  background-color: transparent;
+  padding: 1rem 1.25rem 0.5rem;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .recomendaciones-ia {
+    margin-top: 2rem;
+  }
+
+  .row.flex-lg-nowrap {
+    flex-direction: column-reverse !important;
+  }
+}
+
+.recomendacion-box {
+  background-color: #eef5ff;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.recomendacion-box:hover {
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+}
+
+.recomendacion-box .icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #d0e4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  margin-right: 0.75rem;
+}
+
+.recomendacion-box h6 {
+  font-weight: 400;
+  margin-bottom: 0.25rem;
+  color: #1f2937;
+}
+
+.recomendacion-box p {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.recomendacion-box .btn-link {
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+.recomendacion-box .btn-link:hover {
+  text-decoration: underline;
+}
+
+.recomendacion-box .btn-link i {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+button[type="submit"] {
+  font-weight: 400;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+}
+
+.btn-auto-width {
+  width: auto;
+  min-width: auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .btn-auto-width {
+    width: 100%;
+  }
+}
+
+.row.align-items-stretch > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card.shadow-sm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  form .row > div {
+    margin-bottom: 1rem;
+  }
+
+  .d-flex.flex-sm-row {
+    flex-direction: column !important;
+  }
+}

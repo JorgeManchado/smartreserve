@@ -1,0 +1,134 @@
+<div class="container-fluid py-2">
+  <h2
+    class="mb-4 fw-semibold text-dark text-center"
+    style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
+  >
+    <i class="bi bi-calendar-date fs-3 text-primary"></i> Calendario de Reservas
+  </h2>
+
+  <!-- Caja de filtros -->
+  <div class="bg-white rounded-3 shadow-sm p-3 mb-3 border border-light-subtle">
+    <div class="row g-3">
+      <!-- Buscar -->
+      <div class="col-12 col-md-6 col-lg-7">
+        <div class="input-group h-100">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control border-start-0"
+            placeholder="Buscar por sala, empleado o reserva..."
+            [(ngModel)]="filtroEmpleado"
+            (input)="aplicarFiltros()"
+          />
+        </div>
+      </div>
+
+      <!-- Tipo de espacio -->
+      <div class="col-6 col-md-3 col-lg-2">
+        <select
+          class="form-select h-100"
+          [(ngModel)]="filtroTipo"
+          (change)="aplicarFiltros()"
+        >
+          <option value="">Tipo de espacio</option>
+          <option *ngFor="let tipo of tiposEspacio" [value]="tipo.descripcion">
+            {{ tipo.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Estado reserva -->
+      <div class="col-6 col-md-3 col-lg-3">
+        <select
+          class="form-select h-100"
+          [(ngModel)]="filtroEstado"
+          (change)="aplicarFiltros()"
+        >
+          <option value="">Estado</option>
+          <option
+            *ngFor="let estado of estadosReserva"
+            [value]="estado.descripcion"
+          >
+            {{ estado.descripcion }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- Leyenda -->
+  <div
+    class="bg-white rounded-3 shadow-sm p-3 border border-light-subtle legend-box d-flex flex-wrap align-items-center gap-3 mb-3"
+  >
+    <div
+      *ngFor="let estado of estadosReserva"
+      class="d-flex align-items-center legend-item"
+    >
+      <span
+        class="legend-circle me-2"
+        [ngStyle]="{ 'background-color': estado.bgcolor }"
+      ></span>
+      {{ estado.descripcion }}
+    </div>
+  </div>
+
+  <!-- Calendario -->
+  <div class="calendar-wrapper">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" *ngIf="mostrarModal">
+  <div class="modal-content">
+    <h5 class="mb-3 fw-semibold" *ngIf="fechaSeleccionada">
+      Reservas del {{ fechaSeleccionada | date : "fullDate" }}
+    </h5>
+
+    <div *ngIf="reservasDelDia.length > 0; else sinReservas">
+      <div *ngFor="let r of reservasDelDia" class="reserva-card">
+        <div
+          class="estado-dot me-2"
+          [ngStyle]="{
+            'background-color': r.extendedProps.bgcolor || '#0d6efd'
+          }"
+        ></div>
+        <div>
+          <span [ngStyle]="{ color: r.extendedProps.color || '#1f2937' }">
+            {{ r.extendedProps.sala }}
+          </span>
+          <br />
+          <small class="text-muted"
+            >Usuario: {{ r.extendedProps.usuario }}</small
+          ><br />
+          <small class="text-muted d-block"
+            >Reserva #{{ r.extendedProps.idReserva }}</small
+          >
+          <small class="text-muted">
+            Horario: {{ r.start | date : "shortTime" }} -
+            {{ r.end | date : "shortTime" }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #sinReservas>
+      <p class="text-muted">No hay reservas para este día.</p>
+    </ng-template>
+
+    <div
+      class="acciones mt-4 d-flex flex-column flex-sm-row justify-content-between gap-2"
+    >
+      <button class="btn btn-light w-100 w-sm-auto" (click)="cerrarModal()">
+        Cerrar
+      </button>
+      <button
+        class="btn btn-primary w-100 w-sm-auto"
+        (click)="crearNuevaReserva()"
+      >
+        Nueva Reserva
+      </button>
+    </div>
+  </div>
+</div>

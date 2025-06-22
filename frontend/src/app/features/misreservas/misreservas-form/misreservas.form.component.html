@@ -1,0 +1,207 @@
+<div class="container py-4">
+  <h2 class="mb-2 text-center text-lg-start">Reserva de Espacios de Trabajo</h2>
+  <p class="text-muted mb-4 text-center text-lg-start">
+    Sistema inteligente de reservas con recomendaciones personalizadas
+  </p>
+
+  <div class="row gy-4 flex-lg-nowrap align-items-stretch">
+    <!-- Formulario de Reserva -->
+    <div class="col-lg-8 col-12">
+      <form
+        [formGroup]="form"
+        (ngSubmit)="guardar()"
+        class="card p-4 shadow-sm h-100"
+      >
+        <!-- Usuario -->
+        <div class="mb-3">
+          <label class="form-label">Usuario solicitante</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="usuarioNombre"
+            readonly
+          />
+        </div>
+
+        <!-- Espacio -->
+        <div class="mb-3">
+          <label class="form-label">Espacio de trabajo</label>
+          <select formControlName="idEspacio" class="form-select" required>
+            <option [ngValue]="null">Seleccionar espacio</option>
+            <option
+              *ngFor="let espacio of espacios"
+              [value]="espacio.idEspacio"
+            >
+              {{ espacio.nombre }} (Capacidad: {{ espacio.capacidad }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Vista previa sala -->
+        <div
+          *ngIf="espacioSeleccionado"
+          class="card vista-previa-sala shadow-sm mb-3"
+        >
+          <img
+            [src]="getImagenUrl(espacioSeleccionado.imagen)"
+            class="card-img-top"
+            alt="Imagen sala"
+          />
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center gap-2">
+              {{ espacioSeleccionado.nombre }}
+            </h5>
+            <p class="card-text text-muted d-flex align-items-center gap-3">
+              <span
+                ><i class="bi bi-people-fill me-1"></i>Capacidad:
+                {{ espacioSeleccionado.capacidad }}</span
+              >
+              <span
+                ><i class="bi bi-geo-alt-fill me-1"></i
+                >{{ espacioSeleccionado.ubicacion }}</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <!-- Fechas y Horas -->
+        <div class="row">
+          <div class="col-sm-6 mb-3">
+            <label class="form-label">Fecha de inicio</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaInicio"
+            />
+          </div>
+          <div class="col-sm-6 mb-3">
+            <label class="form-label">Hora de inicio</label>
+            <input
+              type="time"
+              class="form-control"
+              formControlName="horaInicio"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6 mb-3">
+            <label class="form-label">Fecha de finalización</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaFin"
+            />
+          </div>
+          <div class="col-sm-6 mb-3">
+            <label class="form-label">Hora de finalización</label>
+            <input type="time" class="form-control" formControlName="horaFin" />
+          </div>
+        </div>
+
+        <!-- Ocupantes -->
+        <div class="mb-3">
+          <label class="form-label">Número de ocupantes</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="numeroOcupantes"
+            min="1"
+          />
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="form-check mb-2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            formControlName="sincronizado"
+          />
+          <label class="form-check-label">Sincronizado con calendario</label>
+        </div>
+
+        <div class="form-check mb-4">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            formControlName="recomendadoia"
+            [disabled]="true"
+          />
+          <label class="form-check-label">Recomendado por IA</label>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-3">
+          <button
+            class="btn btn-outline-secondary btn-auto-width"
+            type="button"
+            (click)="cancelarReserva()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary btn-auto-width"
+            [disabled]="form.invalid"
+          >
+            Confirmar reserva
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Recomendaciones IA -->
+    <div class="col-lg-4 col-12">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-white">
+          <span class="text-muted fw-semibold">Recomendaciones IA</span>
+        </div>
+        <div class="card-body">
+          <div *ngIf="cargandoRecomendaciones" class="text-center my-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+
+          <ng-container *ngIf="!cargandoRecomendaciones">
+            <div
+              *ngFor="let rec of recomendaciones"
+              class="recomendacion-box bg-light-blue"
+            >
+              <div class="d-flex align-items-start">
+                <div class="icon-circle me-3">
+                  <i class="bi bi-lightbulb-fill text-primary"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <h6 class="fw-semibold mb-1 text-dark">Sala recomendada</h6>
+                  <p class="text-muted mb-1 small">
+                    Basado en tu historial, recomendamos
+                    <strong>{{ rec.nombre_espacio }}</strong
+                    >. Probabilidad:
+                    <strong
+                      >{{ rec.probabilidad * 100 | number : "1.0-0" }}%</strong
+                    >
+                  </p>
+                  <button
+                    class="btn btn-link p-0 small text-primary"
+                    (click)="aplicarRecomendacion(rec)"
+                  >
+                    <i class="bi bi-check2-circle me-1"></i> Sugerencia de
+                    aplicación
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="recomendaciones.length === 0"
+              class="recomendacion-box bg-light-blue"
+            >
+              No hay recomendaciones para hoy.
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

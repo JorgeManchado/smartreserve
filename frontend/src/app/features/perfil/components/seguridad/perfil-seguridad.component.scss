@@ -1,4 +1,4 @@
-input.form-control {
+.password-form input.form-control {
   background-color: #f4f6f8;
   border: none;
   border-radius: 0.5rem;
@@ -6,25 +6,40 @@ input.form-control {
   font-size: 0.95rem;
 }
 
-label.form-label {
+.password-form label.form-label {
   font-weight: 500;
   color: #344054;
 }
 
-.btn-primary {
+.password-form .btn-primary {
   background-color: #2e5bec;
   border-color: #2e5bec;
   font-weight: 500;
   padding: 0.5rem 1.25rem;
   border-radius: 0.45rem;
-
-  &:hover {
-    background-color: #234ac6;
-    border-color: #234ac6;
-  }
 }
 
-.btn-outline-secondary {
+.password-form .btn-primary:hover {
+  background-color: #234ac6;
+  border-color: #234ac6;
+}
+
+.password-form .btn-outline-secondary {
   border-radius: 0.45rem;
   padding: 0.5rem 1.25rem;
+}
+
+.btn-auto-width {
+  width: auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .btn-auto-width {
+    width: 100%;
+  }
+
+  .password-form .d-flex {
+    flex-direction: column !important;
+  }
 }

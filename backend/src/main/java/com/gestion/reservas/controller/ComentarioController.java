@@ -3,6 +3,7 @@ package com.gestion.reservas.controller;
 import com.gestion.reservas.dto.ComentarioDTO;
 import com.gestion.reservas.service.ComentarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,5 +30,11 @@ public class ComentarioController {
     @PutMapping("/anular/{id}")
     public void anular(@PathVariable Long id) {
         comentarioService.anularComentario(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<ComentarioDTO> crearComentario(@RequestBody ComentarioDTO dto) {
+        ComentarioDTO nuevoComentario = comentarioService.crearComentario(dto);
+        return ResponseEntity.ok(nuevoComentario);
     }
 }

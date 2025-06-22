@@ -1,0 +1,135 @@
+.text-danger-soft {
+  color: #dc3545;
+  opacity: 0.75;
+}
+
+.text-danger-soft:hover {
+  opacity: 1;
+}
+
+.hover-confirm {
+  cursor: pointer;
+  color: #198754;
+}
+
+.hover-confirm:hover {
+  color: #0c7c59;
+  text-decoration: none;
+}
+
+.hover-cancel {
+  cursor: pointer;
+  color: #dc3545;
+  opacity: 0.85;
+}
+
+.hover-cancel:hover {
+  color: #b02a37;
+  opacity: 1;
+}
+
+.hover-action {
+  cursor: pointer;
+  color: #6f42c1;
+}
+
+.hover-action:hover {
+  color: #5e35b1;
+  text-decoration: none;
+}
+
+.hover-comment {
+  background-color: transparent;
+}
+
+.hover-comment:hover {
+  background-color: #e0e0e0;
+}
+
+.hover-comment i {
+  color: inherit;
+}
+
+.text-purple {
+  color: #7b61ff;
+}
+
+.bg-purple-subtle {
+  background-color: #f3efff;
+}
+
+#comentarioModal .modal-content {
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+#comentarioModal .modal-header {
+  border-bottom: none;
+}
+
+#comentarioModal .modal-title {
+  font-size: 1.2rem;
+}
+
+#comentarioModal .form-floating textarea {
+  font-size: 0.95rem;
+}
+
+#comentarioModal .btn-primary {
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+}
+
+#comentarioModal .btn-outline-secondary {
+  padding: 0.5rem 1.5rem;
+}
+
+#comentarioModal .modal-footer {
+  border-top: none;
+}
+
+.comentario-icon-wrapper {
+  background-color: #e0f0ff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.comentario-icon-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.comentario-icon-wrapper i {
+  font-size: 1.2rem;
+}
+
+.comentario-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 0.65rem;
+  padding: 2px 5px;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+@media (max-width: 576px) {
+  .comentario-icon-wrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .comentario-icon-wrapper i {
+    font-size: 1rem;
+  }
+
+  .comentario-badge {
+    font-size: 0.55rem;
+    padding: 1px 4px;
+  }
+}

@@ -27,6 +27,7 @@ export class ComentarioComponent implements OnInit {
 
   paginaActual = 1;
   elementosPorPagina = 4;
+  cargando: boolean = true;
 
   constructor(
     private comentarioService: ComentarioService,
@@ -41,28 +42,63 @@ export class ComentarioComponent implements OnInit {
     this.comentarioService.listar().subscribe((data) => {
       this.comentarios = data;
       this.aplicarFiltro();
+      this.cargando = false;
     });
   }
 
   aprobar(id: number): void {
     this.comentarioService.aprobar(id).subscribe(() => this.cargar());
-    this.toastr.info('Comentario aprobado correctamente', 'Acción realizada');
+
+    this.toastr.success(
+      `
+        <div class="toast-content">
+          <div class="toast-title">Acción realizada</div>
+          <div class="toast-message">
+            Comentario aprobado correctamente.
+          </div>
+        </div>
+      `,
+      '',
+      {
+        enableHtml: true,
+        toastClass: 'ngx-toastr custom-toast toast-info',
+        closeButton: true,
+        timeOut: 3000,
+      }
+    );
   }
 
   anular(id: number): void {
     this.comentarioService.anular(id).subscribe(() => this.cargar());
-    this.toastr.info('Comentario anulado correctamente', 'Acción realizada');
+
+    this.toastr.success(
+      `
+        <div class="toast-content">
+          <div class="toast-title">Acción realizada</div>
+          <div class="toast-message">
+            Comentario anulado correctamente.
+          </div>
+        </div>
+      `,
+      '',
+      {
+        enableHtml: true,
+        toastClass: 'ngx-toastr custom-toast toast-info',
+        closeButton: true,
+        timeOut: 3000,
+      }
+    );
   }
 
   aplicarFiltro(): void {
     this.comentariosFiltrados = this.comentarios.filter((comentario) => {
       const coincideNombre = comentario.nombreUsuario
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(this.filtroNombre.toLowerCase());
 
       const coincideEstado =
         !this.filtroEstado ||
-        comentario.estadoDescripcion.toLowerCase() ===
+        comentario.estadoDescripcion?.toLowerCase() ===
           this.filtroEstado.toLowerCase();
 
       const coincideValoracion =
@@ -73,7 +109,9 @@ export class ComentarioComponent implements OnInit {
         .toLowerCase()
         .includes(this.filtroTexto.toLowerCase());
 
-      const fechaComentario = new Date(comentario.fecha);
+      const fechaComentario = comentario.fecha
+        ? new Date(comentario.fecha)
+        : null;
       const desde = this.filtroFechaDesde
         ? new Date(this.filtroFechaDesde)
         : null;
@@ -82,8 +120,8 @@ export class ComentarioComponent implements OnInit {
         : null;
 
       const coincideFecha =
-        (!desde || fechaComentario >= desde) &&
-        (!hasta || fechaComentario <= hasta);
+        (!desde || (fechaComentario && fechaComentario >= desde)) &&
+        (!hasta || (fechaComentario && fechaComentario <= hasta));
 
       return (
         coincideNombre &&

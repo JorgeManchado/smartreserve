@@ -38,8 +38,6 @@ export class AuthStore {
       const name = payload.sub;
       const idUsuario = payload.idUsuario;
 
-      console.log('name', name);
-
       localStorage.setItem(TOKEN_KEY, token);
       localStorage.setItem(ROLE_KEY, rol);
       localStorage.setItem(NAME_KEY, name);

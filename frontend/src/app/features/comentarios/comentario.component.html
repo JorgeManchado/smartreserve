@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container py-2">
   <h2
     class="mb-4 fw-semibold text-dark text-center"
     style="font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px"
@@ -41,7 +41,11 @@
     <div class="row g-3 align-items-end">
       <div class="col-md-4">
         <label class="form-label fw-normal text-secondary">Estado</label>
-        <select class="form-select" [(ngModel)]="filtroEstado">
+        <select
+          class="form-select"
+          [(ngModel)]="filtroEstado"
+          (change)="aplicarFiltro()"
+        >
           <option value="">Todos</option>
           <option value="Aprobado">Aprobado</option>
           <option value="Pendiente">Pendiente</option>
@@ -60,6 +64,7 @@
           [(ngModel)]="filtroValoracionMin"
           min="1"
           max="5"
+          (input)="aplicarFiltro()"
         />
       </div>
 
@@ -72,6 +77,7 @@
           class="form-control"
           placeholder="Palabra clave en el comentario"
           [(ngModel)]="filtroTexto"
+          (input)="aplicarFiltro()"
         />
       </div>
 
@@ -81,6 +87,7 @@
           type="date"
           class="form-control"
           [(ngModel)]="filtroFechaDesde"
+          (input)="aplicarFiltro()"
         />
       </div>
 
@@ -90,6 +97,7 @@
           type="date"
           class="form-control"
           [(ngModel)]="filtroFechaHasta"
+          (input)="aplicarFiltro()"
         />
       </div>
     </div>
@@ -147,20 +155,44 @@
 
     <div class="mt-3 d-flex gap-2">
       <button
-        (click)="anular(c.idComentario)"
+        (click)="anular(c.idComentario!)"
         class="btn btn-outline-danger btn-sm"
         [disabled]="c.estadoDescripcion !== 'Pendiente'"
       >
         Anular
       </button>
       <button
-        (click)="aprobar(c.idComentario)"
+        (click)="aprobar(c.idComentario!)"
         class="btn btn-outline-success btn-sm"
         [disabled]="c.estadoDescripcion !== 'Pendiente'"
       >
         Aprobar
       </button>
     </div>
+  </div>
+
+  <!-- Si no hay comentarios registrados -->
+  <div
+    *ngIf="!cargando && comentarios.length === 0"
+    class="text-center text-muted py-5 w-100"
+  >
+    <i class="bi bi-info-circle fs-1 mb-3 d-block"></i>
+    <p class="mb-0">No hay comentarios registrados.</p>
+    <p class="small">Esta sección se actualizará cuando existan comentarios.</p>
+  </div>
+
+  <!-- Si hay comentarios pero los filtros no devuelven resultados -->
+  <div
+    *ngIf="
+      !cargando && comentarios.length > 0 && comentariosFiltrados.length === 0
+    "
+    class="text-center text-muted py-5 w-100"
+  >
+    <i class="bi bi-search fs-1 mb-3 d-block"></i>
+    <p class="mb-0">No se encontraron comentarios con los filtros aplicados.</p>
+    <p class="small">
+      Ajusta los criterios o elimina alguno para ver más resultados.
+    </p>
   </div>
 
   <!-- Paginación -->
