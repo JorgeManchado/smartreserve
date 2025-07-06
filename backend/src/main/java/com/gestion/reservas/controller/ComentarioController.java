@@ -37,4 +37,6 @@ public class ComentarioController {
         ComentarioDTO nuevoComentario = comentarioService.crearComentario(dto);
         return ResponseEntity.ok(nuevoComentario);
     }
+
+
 }
