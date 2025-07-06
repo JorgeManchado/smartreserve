@@ -26,7 +26,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns(
                         "http://localhost:4200",
-                        "https://gestionreservas.netlify.app"
+                        "https://smartreserve.netlify.app"
                 )
                 .addInterceptors(new JwtHandshakeInterceptor(jwtService))
                 .withSockJS();
